@@ -111,16 +111,6 @@ theorem placesOK_B {Pg Q : Finset (HeightOneSpectrum (𝓞 (DL x L).host.E))} (h
 
 theorem wtL_good {n : ℕ} {u : GlobalTheory.ExportSeries.Weight (Dof x) n} (h : u.Good) : (wtL L u).Good := ⟨(by with_unfolding_all exact (h.le :)), (by with_unfolding_all exact (h.lam_eq :))⟩
 
-theorem thetaFun_L_iff {S U : Formalism.BasicNotions.TH.HSp (Dof x)}
-    (F : GlobalTheory.ExportSeries.Frame S U) (f : Formalism.IndefR.Datum.WO S U → ℂ) :
-    @Formalism.IndefR.Datum.IsThetaFunO (DL x L) (frL L F).ψ S U f ↔
-      @Formalism.IndefR.Datum.IsThetaFunO (Dof x) F.ψ S U f := by
-  constructor <;> intro h <;>
-    exact ⟨(by with_unfolding_all exact h.quasi),
-      (by with_unfolding_all exact h.level),
-      (by with_unfolding_all exact h.cont),
-      (by with_unfolding_all exact h.smooth)⟩
-
 theorem frL_good {S U : Formalism.BasicNotions.TH.HSp (Dof x)} {F : GlobalTheory.ExportSeries.Frame S U} (h : F.Good) : (frL L F).Good :=
   { rank_le := (by with_unfolding_all exact (h.rank_le :))
     onbS := (by with_unfolding_all exact (h.onbS :))

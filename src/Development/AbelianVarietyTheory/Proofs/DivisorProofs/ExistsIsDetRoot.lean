@@ -64,12 +64,6 @@ theorem sigR_sigR (D : D7) (a : Af D.host.F ⊗[D.host.F] D.host.E) :
   | tmul a b => exact congrArg (fun x => a ⊗ₜ[D.host.F] x) (star_star b)
   | add a b ha hb => simp only [map_add (f := _), ha, hb]
 
-theorem ext_parts (D : D7) {a b : AE D} (h1 : infPart D a = infPart D b) (h2 : finPart D a = finPart D b) :
-    a = b := by
-  obtain ⟨e, he, -⟩ := GlobalTheory.AdSplit.exists_adele_equiv D.host.F D.host.E
-  apply e.injective
-  exact Prod.ext ((he a).1.trans (h1.trans (he b).1.symm)) ((he a).2.trans (h2.trans (he b).2.symm))
-
 theorem norm_one {R : Type} [CommRing R] (σ : R →+* R) (hσ : ∀ a, σ (σ a) = a) {a b : R} (h : a * b = 1) :
     a * σ b * σ (a * σ b) = 1 := by
   have h' := congrArg σ h

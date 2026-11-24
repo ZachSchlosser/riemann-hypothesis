@@ -1219,21 +1219,6 @@ structure TwPack (H : Formalism.L2.Herm.HermColsCh (I.rec7 l Z)) (F : ∀ u, For
   off : ∀ (κ : J.levJ.U) (κ' : (F u).levJ.U), κ'.1 = reGL (rankN (I.rec7 l Z) (B.R.m - 1) (Nat.sub_le _ _)) _ κ.1 →
     (∀ v ∈ Q, bc (prV (E := (I.rec7 l Z).host.E) v) κ.1 = 1) → J.chiJ κ = (F u).levJ.chi κ'
 
-theorem twBefore_cl_nonempty (hOk : I.Ok) (u : B.Word) (a : I.ι) : Nonempty (I.stp u a (B.R.m - 1)).Cl := by
-  classical
-  have hm2 := B.R.two_le_m
-  have hmj : B.R.m - 1 + 1 = B.R.m := by omega
-  have hL := hOk.idx_ok a
-  obtain ⟨b0x, -⟩ := hL.last_uniq
-  let b0 : Idx I.sel (I.tup a) (I.idx a) (B.R.m - 1) := ⟨some (cast (by rw [show B.R.m - 1 = B.R.m - 2 + 1 by omega]) b0x), by simp; omega⟩
-  let q0 : (I.stp u a (B.R.m - 1)).D b0 := ⟨(DecoF.base _ _ _ _ _, {z | z - 0 ∈ locLat (rowSG (B.primes X) I.sel (I.tup a)) (DecoF.base B.fields.E (B.R.N (B.R.m - 1)) ((B.primes X).vT u) (B.primes X).vGs (QE I.sel (I.tup a : Chr B.fields.F B.fields.E B.fields.K))).deco.1.N
-      (fun P => if P.1 ∈ (B.primes X).vGs then 0 else ((I.cst a).M : ℤ))}), by
-    show _ ∈ (ysAt B.R I.sel (I.tup a) (I.cst a) (B.R.m - 1)).ys _
-    rw [ysAt_ys_of_eq _ _ _ hmj]
-    exact ⟨0, zero_mem _, rfl⟩⟩
-  exact ⟨(I.stp u a (B.R.m - 1)).cl b0 q0⟩
-
-
 theorem twPack_ex (hok : I.Ok) (pins : TC.Pins B X) {H : Formalism.L2.Herm.HermColsCh (I.rec7 l Z)}
     {F : ∀ u, FormsTiedSym (I.rec7 l Z) u (H.Ch u) (H.chOf u)}
     {Q : Finset (HeightOneSpectrum (𝓞 (I.rec7 l Z).host.F))} (u : B.Word) (a : I.ι)

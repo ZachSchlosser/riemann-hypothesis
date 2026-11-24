@@ -1563,11 +1563,6 @@ theorem mem_disc_of_nonneg {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) 
   · rintro rfl
     simp at h2
 
-theorem mem_disc {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) {T : ℝ} {ρ : ℂ}
-    (h : ρ ∈ zerosBox χ (1 / 2) T) :
-    ⌊ρ.im⌋ ∈ Finset.Icc (-⌈T⌉) ⌈T⌉ ∧ ρ ∈ zerosDisc χ (2 + ((⌊ρ.im⌋ : ℝ) : ℂ) * I) 3 :=
-  mem_disc_of_nonneg χ (by norm_num : (0 : ℝ) ≤ 1 / 2) h
-
 /-- The weighted zero count retains logarithmic dependence on the level,
 including zeros on the imaginary axis when `σ = 0`. -/
 theorem total_count_log : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) (T σ : ℝ),
