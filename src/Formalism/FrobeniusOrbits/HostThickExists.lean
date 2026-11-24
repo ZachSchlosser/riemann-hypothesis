@@ -88,43 +88,4 @@ def HostStab : Prop :=
   ∀ Γ : Subgroup (Matrix.GeneralLinearGroup (Fin k) (hostE ζ a b)),
     (∀ γ ∈ Γ, ∃ m : ℕ, orderOf γ = g ^ m) → Γ = ⊥
 
-def HostOrdinary : Prop :=
-  ∀ (e q d : ℕ), HostHyp q d →
-  ∀ (L : Type) [Field L] [NumberField L] (ζ a b : L), IsLayer (e + 2) q d ζ a b →
-  ∀ (p : ℕ) [Fact p.Prime] (P : Ideal (𝓞 (hostE ζ a b))) [P.IsPrime]
-    [P.LiesOver (span {(p : ℤ)})],
-    (∀ σ τ : hostE ζ a b ≃ₐ[ℚ] hostE ζ a b, τ ∈ MulAction.stabilizer _ P →
-      (galE e ζ a b (σ * τ) ∈ Psi e ↔ galE e ζ a b σ ∈ Psi e)) ↔
-    (primesOver (span {(p : ℤ)}) (𝓞 (Kd b))).ncard = 2
-
-def HostUnimodular : Prop :=
-  ∀ (e q d : ℕ), HostHyp q d →
-  ∀ (L : Type) [Field L] [NumberField L] (ζ a b : L), IsLayer (e + 2) q d ζ a b →
-  ∀ σ : hostE ζ a b ≃ₐ[ℚ] hostE ζ a b, galE e ζ a b σ = cc e →
-  ∀ 𝔟 : Ideal (𝓞 (hostE ζ a b)),
-    differentIdeal (𝓞 (KinE ζ a b)) (𝓞 (hostE ζ a b)) = 𝔟 * (σ • 𝔟) →
-    ∀ x : hostE ζ a b,
-      x ∈ ((𝔟 : FractionalIdeal (nonZeroDivisors (𝓞 (hostE ζ a b))) (hostE ζ a b))⁻¹) ↔
-        ∀ y ∈ ((𝔟 : FractionalIdeal (nonZeroDivisors (𝓞 (hostE ζ a b))) (hostE ζ a b))⁻¹),
-          Algebra.trace (KinE ζ a b) (hostE ζ a b) (x * σ y) ∈
-            (algebraMap (𝓞 (KinE ζ a b)) (KinE ζ a b)).range
-
-def etaF {L : Type*} [Field L] [NumberField L] (ζ a b : L) (𝔭 : Ideal (𝓞 (hostF ζ a b))) : ℤ :=
-  if (primesOver 𝔭 (𝓞 (hostE ζ a b))).ncard = 2 then 1 else -1
-
-def HostEta : Prop :=
-  ∀ (e q d : ℕ), HostHyp q d →
-  ∀ (L : Type) [Field L] [NumberField L] (ζ a b : L), IsLayer (e + 2) q d ζ a b →
-    (∀ 𝔭 : Ideal (𝓞 (hostF ζ a b)), 𝔭.IsPrime → 𝔭 ≠ ⊥ →
-      (primesOver 𝔭 (𝓞 (hostE ζ a b))).ncard = 2 ∨
-        ((primesOver 𝔭 (𝓞 (hostE ζ a b))).ncard = 1 ∧ 𝔭.inertiaDegIn (𝓞 (hostE ζ a b)) = 2)) ∧
-    (∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → p ≠ q → p ≠ d →
-      ∀ (P : Ideal (𝓞 (hostE ζ a b))) [P.IsPrime] [P.LiesOver (span {(p : ℤ)})]
-        (σ : hostE ζ a b ≃ₐ[ℚ] hostE ζ a b), IsArithFrobAt ℤ σ P →
-        (etaF ζ a b (P.comap (algebraMap (𝓞 (hostF ζ a b)) (𝓞 (hostE ζ a b)))) = -1 ↔
-          galE e ζ a b σ = cc e)) ∧
-    (∀ (p : ℕ) [Fact p.Prime], (p = 2 ∨ p = q ∨ (p = d ∧ 2 ≤ e)) →
-      ∀ (P : Ideal (𝓞 (hostE ζ a b))) [P.IsPrime] [P.LiesOver (span {(p : ℤ)})],
-        etaF ζ a b (P.comap (algebraMap (𝓞 (hostF ζ a b)) (𝓞 (hostE ζ a b)))) = 1)
-
 end Formalism.FrobeniusOrbits

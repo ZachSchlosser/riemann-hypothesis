@@ -1,6 +1,6 @@
 module
 
-public import Formalism.CMTypeGalois.StatementField
+public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 import Mathlib.Algebra.Order.Floor.Extended
@@ -45,7 +45,7 @@ import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
-open NumberField Ideal Filter Topology Finset Formalism.Q3
+open NumberField Ideal Filter Topology Finset
 
 noncomputable section
 
@@ -61,11 +61,6 @@ def QuadDiscr : Prop :=
   ∀ (K : Type) [Field K] [NumberField K] (a : ℤ) (x : K),
     x ^ 2 = (a : K) → IntermediateField.adjoin ℚ {x} = ⊤ → Squarefree a → a % 4 = 1 →
     discr K = a
-
-def MQDiscr : Prop :=
-  ∀ (k : ℕ) (q : Fin k → ℕ), 1 ≤ k → (∀ i, (q i).Prime ∧ q i % 4 = 3) → Function.Injective q →
-  ∀ (E : Type) [Field E] [NumberField E] (α : Fin k → E), IsMQ (fun i => -(q i : ℤ)) α →
-    discr E = (-1) ^ (2 ^ (k - 1)) * ∏ i, (q i : ℤ) ^ (2 ^ (k - 1))
 
 def APLogDensity : Prop :=
   ∀ (N : ℕ) [NeZero N] (a : ZMod N), IsUnit a →

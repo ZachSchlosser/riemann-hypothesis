@@ -119,34 +119,6 @@ theorem pow_mod_of {K : Type*} [Monoid K] {w : K} {N : ℕ} (hw : w ^ N = 1) (a 
     w ^ (a % N) = w ^ a := by
   conv_rhs => rw [← Nat.mod_add_div a N, pow_add, pow_mul, hw, one_pow, mul_one]
 
-theorem splits_of_dvd {L K : Type*} [Field L] [Field K] [Algebra ℚ L] [Algebra ℚ K] (x : L)
-    (f : ℚ[X]) (hf : f ≠ 0) (hx : aeval x f = 0) (hs : (f.map (algebraMap ℚ K)).Splits) :
-    IsIntegral ℚ x ∧ ((minpoly ℚ x).map (algebraMap ℚ K)).Splits := by
-  have hi : IsIntegral ℚ x := by
-    exact IsAlgebraic.isIntegral ⟨f, hf, hx⟩
-  refine ⟨hi, ?_⟩
-  have hd : (minpoly ℚ x).map (algebraMap ℚ K) ∣ f.map (algebraMap ℚ K) :=
-    Polynomial.map_dvd _ (minpoly.dvd ℚ x hx)
-  have hf0 : f.map (algebraMap ℚ K) ≠ 0 := by
-    exact (Polynomial.map_ne_zero_iff (algebraMap ℚ K).injective).mpr hf
-  exact hs.of_dvd hf0 hd
-
-theorem splits_pow {K : Type*} [Field K] [Algebra ℚ K] {n : ℕ} {ξ : K}
-    (hξ : IsPrimitiveRoot ξ n) : ((X ^ n - 1 : ℚ[X]).map (algebraMap ℚ K)).Splits := by
-  have hm : (X ^ n - 1 : ℚ[X]).map (algebraMap ℚ K) = X ^ n - C 1 := by simp
-  rw [hm]
-  exact X_pow_sub_one_splits hξ
-
-theorem splits_sq {K : Type*} [Field K] [Algebra ℚ K] (c : ℕ) (g : K) (hg : g ^ 2 = -(c : K)) :
-    ((X ^ 2 + C (c : ℚ) : ℚ[X]).map (algebraMap ℚ K)).Splits := by
-  have hC : (C g : K[X]) ^ 2 = -(c : K[X]) := by
-    rw [← C_pow, hg, C_neg, map_natCast]
-  have hm : (X ^ 2 + C (c : ℚ) : ℚ[X]).map (algebraMap ℚ K) = (X - C g) * (X - C (-g)) := by
-    simp only [Polynomial.map_add (f := _), Polynomial.map_pow, Polynomial.map_X, map_natCast, C_neg, Polynomial.map_natCast]
-    linear_combination hC
-  rw [hm]
-  exact (Polynomial.Splits.X_sub_C g).mul (Polynomial.Splits.X_sub_C (-g))
-
 theorem prim_pow {N m : ℕ} [NeZero N] (hm : m ∣ N) : IsPrimitiveRoot (z N ^ (N / m)) m := by
   have hN : N ≠ 0 := NeZero.ne N
   exact (z_spec N).pow (Nat.pos_of_ne_zero hN) (Nat.div_mul_cancel hm).symm
@@ -180,32 +152,6 @@ theorem aut (N : ℕ) [NeZero N] (v : ℕ) (hv : v.Coprime N) :
   rw [map_pow, hz, ← pow_mul, ← pow_mul, mul_comm]
 
 end Cyc
-
-section Div
-
-private theorem X_sq_add_C_natCast_ne_zero (c : ℕ) : (X ^ 2 + C (c : ℚ) : ℚ[X]) ≠ 0 := by
-  exact (Polynomial.monic_X_pow_add_C _ two_ne_zero).ne_zero
-
-theorem layer_emb {n q d : ℕ} [Fact q.Prime] [Fact d.Prime] (hq4 : q % 4 = 3) (hd4 : d % 4 = 3)
-    {L : Type*} [Field L] [NumberField L] {ζ a b : L} (h : IsLayer n q d ζ a b)
-    {N : ℕ} [NeZero N] (h2 : 2 ^ n ∣ N) (hq : q ∣ N) (hd : d ∣ N) :
-    Nonempty (L →ₐ[ℚ] Cyc N) := by
-  obtain ⟨gq, hgq⟩ := sqrt_exists hq4 hq
-  obtain ⟨gd, hgd⟩ := sqrt_exists hd4 hd
-  have hne : (X ^ (2 ^ n) - 1 : ℚ[X]) ≠ 0 := by
-    simpa using Polynomial.X_pow_sub_C_ne_zero (pow_pos two_pos n) (1 : ℚ)
-  have hfacts : ∀ x ∈ ({ζ, a, b} : Set L),
-      IsIntegral ℚ x ∧ ((minpoly ℚ x).map (algebraMap ℚ (Cyc N))).Splits := by
-    intro s hs
-    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hs
-    rcases hs with rfl | rfl | rfl
-    · exact splits_of_dvd _ (X ^ (2 ^ n) - 1) hne (by simp [h.1.pow_eq_one])
-        (splits_pow (prim_pow h2))
-    · exact splits_of_dvd _ _ (X_sq_add_C_natCast_ne_zero q) (by simp [h.2.1]) (splits_sq q gq hgq)
-    · exact splits_of_dvd _ _ (X_sq_add_C_natCast_ne_zero d) (by simp [h.2.2.1]) (splits_sq d gd hgd)
-  exact IntermediateField.nonempty_algHom_of_adjoin_splits hfacts h.2.2.2
-
-end Div
 
 section Two
 

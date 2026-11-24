@@ -95,9 +95,6 @@ theorem ord_pos : 0 < φ.ord := by
 
 def h : φ.A →+ Additive (HGrp φ.e) := φ.h0
 
-theorem h_surj : Function.Surjective φ.h := by
-  exact φ.projection_surjective_field
-
 def a0 : φ.A := φ.gen0
 
 def A0 : AddSubgroup φ.A := AddSubgroup.zmultiples φ.a0

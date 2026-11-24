@@ -45,7 +45,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.GaloisValuations.GlobalA
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NStageTrivialCharacterCoeffEqAlt
-import Formalism.LocalRingCardinality.SpanPowerMembership.Primes
+import Mathlib.NumberTheory.LucasPrimality
 import Formalism.LocalToGlobal.NormalizedHeckeFactors.ChiDefs
 import Formalism.LocalToGlobal.NormalizedHeckeFactors.TwDefs
 import Formalism.SharpRestriction.CuspSpanNormBounds.Point
