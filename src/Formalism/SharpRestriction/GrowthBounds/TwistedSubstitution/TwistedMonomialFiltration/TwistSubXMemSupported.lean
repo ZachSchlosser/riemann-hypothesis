@@ -129,7 +129,7 @@ theorem wCoeff_add (w : Set ι) (M : ι × Fin n →₀ ℕ) (P Q : MvPolynomial
   simp only [MvPolynomial.coeff_add, coeff_wCoeff]
   split_ifs <;> simp
 
-theorem wCoeff_mem {Fl : Formalism.MainNotions.TestSideWords.TwistedFiltration.G1.flt_Fil R} (w : Set ι) (M : ι × Fin n →₀ ℕ) {t : ℤ}
+theorem wCoeff_mem {Fl : Formalism.MainNotions.G.GLWeightTheory.flt_Fil R} (w : Set ι) (M : ι × Fin n →₀ ℕ) {t : ℤ}
     {P : MvPolynomial (ι × Fin n) R} (hP : P ∈ (Formalism.MainNotions.TestSideWords.TwistedFiltration.G1.flt_lift Fl 0).F t) :
     wCoeff w M P ∈ (Formalism.MainNotions.TestSideWords.TwistedFiltration.G1.flt_lift Fl 0).F t := by
   intro ν
@@ -324,7 +324,7 @@ theorem sum_wCoeff (w : Set ι) (F : MvPolynomial (ι × Fin n) R) :
         congr 1
         rw [← (Finset.mem_filter.1 hμ).2, Finsupp.filter_pos_add_filter_neg]
 
-def trivFil (B : Type*) [CommRing B] : Formalism.MainNotions.TestSideWords.TwistedFiltration.G1.flt_Fil B where
+def trivFil (B : Type*) [CommRing B] : Formalism.MainNotions.G.GLWeightTheory.flt_Fil B where
   F t := if t ≤ 0 then ⊤ else ⊥
   mul_mem := by
     intro t u a b ha hb
@@ -506,7 +506,7 @@ theorem valS_wCoeff_ge (w : Set ι) (hw : ∀ l ∈ w, LL.vec l = true) (hd : Di
 
 theorem valS_wCoeff_of_disj (w : Set ι) (hd : Disjoint S w) (F : MvPolynomial (ι × Fin n) R) (M : ι × Fin n →₀ ℕ) :
     valS LL S F ≤ valS LL S (wCoeff w M F) := by
-  have h := Formalism.MainNotions.TestSideWords.TwistedFiltration.G1.flt_withTop_le (a := valS LL S F) (b := valS LL S (wCoeff w M F)) (N := 0) (by
+  have h := Formalism.MainNotions.G.GLWeightTheory.flt_withTop_le (a := valS LL S F) (b := valS LL S (wCoeff w M F)) (N := 0) (by
     intro t ht
     rw [sub_zero, Formalism.MainNotions.TestSideWords.TwistedFiltration.G1.flt_le_valS] at *
     rw [twistSub_wCoeff LL S w hd]

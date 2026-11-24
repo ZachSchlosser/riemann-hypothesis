@@ -210,7 +210,7 @@ end Aeval
 
 theorem valAeval : ValAeval := by
   intro Kf _ ι κ n _ LL LL' S L S' f g F hF h1 h2
-  have := flt_withTop_le (a := valS LL S F) (b := valS LL' S' (aeval g F)) (N := 0) ?_
+  have := Formalism.MainNotions.G.GLWeightTheory.flt_withTop_le (a := valS LL S F) (b := valS LL' S' (aeval g F)) (N := 0) ?_
   · simpa using this
   · intro t ht
     rw [flt_le_valS] at ht
