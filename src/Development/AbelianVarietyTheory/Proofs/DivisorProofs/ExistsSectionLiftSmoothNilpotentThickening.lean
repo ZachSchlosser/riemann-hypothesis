@@ -601,12 +601,12 @@ theorem comp_overR {R : Type} [CommRing R] (X : Over (Sp R)) (a : R) {S : Type} 
 theorem awR_comp {R : Type} [CommRing R] (x y : R) :
     (IsLocalization.Away.awayToAwayRight (P := Localization.Away (x * y)) x y).comp
       (algebraMap R (Localization.Away x)) = algebraMap R _ :=
-  RingHom.ext (IsLocalization.Away.awayToAwayRight_eq x y)
+  RingHom.ext (IsLocalization.Away.awayToAwayRight_eq (S := Localization.Away x) x y)
 
 theorem awL_comp {R : Type} [CommRing R] (x y : R) :
     (IsLocalization.Away.awayToAwayLeft (P := Localization.Away (y * x)) x y).comp
       (algebraMap R (Localization.Away x)) = algebraMap R _ :=
-  RingHom.ext (IsLocalization.Away.awayToAwayLeft_eq x y)
+  RingHom.ext (IsLocalization.Away.awayToAwayLeft_eq (S := Localization.Away x) x y)
 
 end GlobalTheory.SecGlue.Red
 
@@ -1173,10 +1173,10 @@ theorem exists_pair_lift_comb : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀]
 
   have hρ : (IsLocalization.Away.awayToAwayRight (S := Localization.Away a) (P := Localization.Away (a * b))
       a b).comp (algebraMap R (Localization.Away a)) = algebraMap R (Localization.Away (a * b)) :=
-    RingHom.ext (IsLocalization.Away.awayToAwayRight_eq a b)
+    RingHom.ext (IsLocalization.Away.awayToAwayRight_eq (S := Localization.Away a) a b)
   have hρ' : (IsLocalization.Away.awayToAwayLeft (S := Localization.Away b) (P := Localization.Away (a * b))
       b a).comp (algebraMap R (Localization.Away b)) = algebraMap R (Localization.Away (a * b)) :=
-    RingHom.ext (IsLocalization.Away.awayToAwayLeft_eq b a)
+    RingHom.ext (IsLocalization.Away.awayToAwayLeft_eq (S := Localization.Away b) b a)
   generalize IsLocalization.Away.awayToAwayRight (S := Localization.Away a) (P := Localization.Away (a * b))
       a b = ρ at hρ ⊢
   generalize IsLocalization.Away.awayToAwayLeft (S := Localization.Away b) (P := Localization.Away (a * b))
