@@ -442,30 +442,6 @@ end Hecke
 
 def nd2N : ℕ := 204572886511813553061037407562329625995783655411690436542768105489192394035355663504895707466548678171695054788500010062488923813826764064938234928730947196464262768270018653110228498338042697795156970159903677022807129186961004810571117527615229822789011462114279289419559348825463524785325415815445950503458435921145728668675289394505621558664460319354973532563002004291054537384997546176343222140701606270894674242774158138205418672187221164903157007908864
 
-open Formalism.BasicNotions.Examples₂ (H0)
-
-theorem exampleField_le_cyclotomic : H0.EQ ≤ cycQ nd2N :=
-  (condEQ H0).1.trans (cyclotomic_mono_of_dvd (by decide +kernel))
-
-section Inst
-
-variable (LL : Fld) [FiniteDimensional ℚ LL] [Normal ℚ LL] (hLL : cycQ nd2N ≤ LL)
-
-abbrev nd2X : Fields := hostFields H0.toHostRaw ndIota LL (exampleField_le_cyclotomic.trans hLL)
-
-abbrev nd2z (a b : ℤ) : 𝓞 (nd2X LL hLL).E := hz H0.toHostRaw ndIota LL (exampleField_le_cyclotomic.trans hLL) a b
-
-def toyPrimes : Primes (nd2X LL hLL) where
-  cond := H0.condN
-  g := ![toyFirstParameter, toySecondParameter]
-  piG := ![nd2z LL hLL 1 (((H0.condN : ℕ) : ℤ) * 18),
-    nd2z LL hLL 1 (((H0.condN : ℕ) : ℤ) * 768)]
-  Word := Fin 2
-  T := ![nd2T, columnDegreeBound]
-  piT := ![nd2z LL hLL 1 (((H0.condN * (toyFirstParameter * toySecondParameter) ^ 2 : ℕ) : ℤ) * 468),
-    nd2z LL hLL 1 (((H0.condN * (toyFirstParameter * toySecondParameter) ^ 2 : ℕ) : ℤ) * 828)]
-
-end Inst
 
 section Gen
 
