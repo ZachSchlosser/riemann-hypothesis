@@ -372,20 +372,6 @@ theorem EF_expand (hι : Function.Injective ι) (a b : Fin m) (P : MvPolynomial 
 
   simp only [map_sum, pd_X_mul, Finset.sum_add_distrib, sum_ite_row ι hι, mul_add, Finset.mul_sum]
 
-private theorem pderiv_pderiv_comm' {σ : Type} (i j : σ) (p : MvPolynomial σ ℂ) :
-    pderiv i (pderiv j p) = pderiv j (pderiv i p) := by
-  classical
-  have h : ⁅(pderiv i : Derivation ℂ (MvPolynomial σ ℂ) (MvPolynomial σ ℂ)),
-      (pderiv j : Derivation ℂ (MvPolynomial σ ℂ) (MvPolynomial σ ℂ))⁆ = 0 := by
-    apply MvPolynomial.derivation_ext
-    intro k
-    rw [Derivation.commutator_apply, pderiv_X, pderiv_X, Derivation.zero_apply]
-    simp only [Pi.single_apply]
-    split_ifs <;> simp
-  have := congrArg (fun D => D p) h
-  simp only [Derivation.commutator_apply, Derivation.zero_apply] at this
-  exact sub_eq_zero.1 this
-
 theorem comm_eq (hι : Function.Injective ι) (a b : Fin m) (P : MvPolynomial σ ℂ) :
     PI.FJM.bRow ι a b (PI.FJM.bRow ι b a P) - PI.FJM.bRow ι b a (PI.FJM.bRow ι a b P) =
       ∑ k : Fin n, X (ι (a, k)) * pderiv (ι (a, k)) P - ∑ k : Fin n, X (ι (b, k)) * pderiv (ι (b, k)) P := by
@@ -395,7 +381,7 @@ theorem comm_eq (hι : Function.Injective ι) (a b : Fin m) (P : MvPolynomial σ
       ∑ k : Fin n, ∑ j : Fin n, X (ι (a, k)) * (X (ι (b, j)) * pderiv (ι (b, k)) (pderiv (ι (a, j)) P)) := by
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun j _ => ?_
-    rw [pderiv_pderiv_comm' (ι (a, j)) (ι (b, k)) P]
+    rw [MvPolynomial.pderiv_comm (ι (a, j)) (ι (b, k)) P]
     ring
   rw [hS]
   abel

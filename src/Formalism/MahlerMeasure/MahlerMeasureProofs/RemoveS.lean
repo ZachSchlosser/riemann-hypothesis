@@ -123,12 +123,8 @@ theorem fockK_X_mul (v : σ) (g h : MvPolynomial σ k) :
     M.fockK (X v * g) h = M.fockK g (pderiv v h) := by
   simpa only [M.fockK_eq_pair, mul_comm (X v) g] using FockPairing.pair_mul_X v g h
 
-private theorem mvPolynomial_pderiv_X_eq_zero_of_ne {i j : σ} (h : j ≠ i) : pderiv i (X j : MvPolynomial σ k) = 0 := by
-  classical
-  rw [MvPolynomial.pderiv_X, Pi.single_apply, if_neg h]
-
 private theorem pderiv_X_pow_of_ne {i j : σ} (h : j ≠ i) (z : ℕ) : pderiv i (X j ^ z : MvPolynomial σ k) = 0 := by
-  rw [Derivation.leibniz_pow, mvPolynomial_pderiv_X_eq_zero_of_ne h, smul_zero, smul_zero]
+  rw [Derivation.leibniz_pow, pderiv_X_of_ne h, smul_zero, smul_zero]
 
 private theorem pderiv_X_pow_mul_of_ne {i j : σ} (h : j ≠ i) (z : ℕ) (g : MvPolynomial σ k) :
     pderiv i (X j ^ z * g) = X j ^ z * pderiv i g := by
@@ -194,7 +190,7 @@ theorem eulL_pderiv_notMem {s : ℕ} (t : Fin s → σ) (v : σ) (hv : ∀ c, t 
 
   rw [eulL_apply, eulL_apply, map_sum]
   refine Finset.sum_congr rfl (fun c _ => ?_)
-  rw [MvPolynomial.pderiv_mul, mvPolynomial_pderiv_X_eq_zero_of_ne (hv c), zero_mul, zero_add, pderiv_comm]
+  rw [MvPolynomial.pderiv_mul, MvPolynomial.pderiv_X_of_ne (hv c), zero_mul, zero_add, pderiv_comm]
 
 theorem eulL_pderiv_mem {s : ℕ} (t : Fin s → σ) (ht : Function.Injective t) (c0 : Fin s)
     (h : MvPolynomial σ k) :
@@ -768,7 +764,7 @@ theorem fockForm_augLift_augLift [CharZero k] (hv : M.TieVars w e zv sv) (hr : 1
 
     rw [map_sum]
     refine Finset.sum_eq_zero (fun d _ => ?_)
-    rw [MvPolynomial.pderiv_mul, mvPolynomial_pderiv_X_eq_zero_of_ne (hzz d).1, mvPolynomial_pderiv_X_eq_zero_of_ne (hzz d).2, zero_mul, mul_zero, add_zero]
+    rw [MvPolynomial.pderiv_mul, MvPolynomial.pderiv_X_of_ne (hzz d).1, MvPolynomial.pderiv_X_of_ne (hzz d).2, zero_mul, mul_zero, add_zero]
   have hPd : pderiv zv (Formalism.GM.tiePhi w e o n z y') = 0 := by
 
     rw [tiePhi_eq_sum_range_neg_one_pow_div_tieE_pow_tieF_pow, map_sum]

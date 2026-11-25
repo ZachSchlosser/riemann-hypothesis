@@ -45,19 +45,10 @@ theorem so_smul (c : σ → σ → k) (r : k) (P : MvPolynomial σ k) :
      refine Finset.sum_congr rfl fun l _ => Finset.sum_congr rfl fun l' _ => ?_
      ring)
 
-private theorem mvPolynomial_pderiv_comm (a b : σ) (P : MvPolynomial σ k) :
-    pderiv a (pderiv b P) = pderiv b (pderiv a P) := by
-  classical
-  induction P using MvPolynomial.induction_on
-  · simp
-  · simp [*]
-  · rename_i p m hp
-    simp only [Derivation.leibniz, smul_eq_mul, map_add (f := _), hp, pderiv_X]
-    by_cases ha : a = m <;> by_cases hb : b = m <;> simp [ha, hb] <;> ring
-
 theorem pd4 (P : MvPolynomial σ k) (a b c d : σ) :
     pderiv a (pderiv b (pderiv c (pderiv d P))) = pderiv c (pderiv d (pderiv a (pderiv b P))) := by
-  rw [mvPolynomial_pderiv_comm b c, mvPolynomial_pderiv_comm a c, mvPolynomial_pderiv_comm b d, mvPolynomial_pderiv_comm a d]
+  rw [MvPolynomial.pderiv_comm b c, MvPolynomial.pderiv_comm a c, MvPolynomial.pderiv_comm b d,
+    MvPolynomial.pderiv_comm a d]
 
 private theorem sum4_lemma {M : Type} [AddCommMonoid M] (f : σ → σ → σ → σ → M) :
     ∑ a, ∑ b, ∑ c, ∑ d, f a b c d = ∑ c, ∑ d, ∑ a, ∑ b, f a b c d := by

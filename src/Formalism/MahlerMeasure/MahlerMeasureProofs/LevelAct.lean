@@ -118,24 +118,18 @@ theorem euler_e_of_biHom {a b : ℕ} {g : MvPolynomial σ k} (h : BiHom w e a b 
 
 variable {w e}
 
-private theorem mvPolynomial_pderiv_X_of_ne {i j : σ} (h : j ≠ i) : pderiv i (X j : MvPolynomial σ k) = 0 := by
-  exact pderiv_X_of_ne h
-
-private theorem mvPolynomial_pderiv_X_self (i : σ) : pderiv i (X i : MvPolynomial σ k) = 1 := by
-  exact pderiv_X_self i
-
 theorem pderiv_X_inj {f : Fin r → σ} (hf : Function.Injective f) (c d : Fin r) :
     pderiv (f c) (X (f d) : MvPolynomial σ k) = if d = c then 1 else 0 := by
   by_cases h : d = c
   · subst h
     rw [if_pos rfl]
-    exact mvPolynomial_pderiv_X_self _
+    exact pderiv_X_self _
   · rw [if_neg h]
-    exact mvPolynomial_pderiv_X_of_ne (fun h' => h (hf h'))
+    exact pderiv_X_of_ne (fun h' => h (hf h'))
 
 theorem pderiv_e_S (he : Function.Injective e) (hwe : ∀ c d, w c ≠ e d)
     (c : Fin r) : pderiv (e c) (∑ d, X (w d) * X (e d) : MvPolynomial σ k) = X (w c) := by
-  have h0 : ∀ d, pderiv (e c) (X (w d) : MvPolynomial σ k) = 0 := fun d => mvPolynomial_pderiv_X_of_ne (hwe d c)
+  have h0 : ∀ d, pderiv (e c) (X (w d) : MvPolynomial σ k) = 0 := fun d => pderiv_X_of_ne (hwe d c)
 
   rw [map_sum]
   simp only [Derivation.leibniz, h0, pderiv_X_inj he, smul_eq_mul, mul_ite, mul_one, mul_zero,
@@ -144,7 +138,7 @@ theorem pderiv_e_S (he : Function.Injective e) (hwe : ∀ c d, w c ≠ e d)
 theorem pderiv_w_S (hw : Function.Injective w) (hwe : ∀ c d, w c ≠ e d)
     (c : Fin r) : pderiv (w c) (∑ d, X (w d) * X (e d) : MvPolynomial σ k) = X (e c) := by
   have h0 : ∀ d, pderiv (w c) (X (e d) : MvPolynomial σ k) = 0 :=
-    fun d => mvPolynomial_pderiv_X_of_ne (fun h => hwe c d h.symm)
+    fun d => pderiv_X_of_ne (fun h => hwe c d h.symm)
 
   rw [map_sum]
   simp only [Derivation.leibniz, h0, pderiv_X_inj hw, smul_eq_mul, mul_ite, mul_one, mul_zero,
@@ -166,7 +160,7 @@ theorem F_S_mul (hw : Function.Injective w) (he : Function.Injective e) (hwe : �
     ring
   have h2 : ∀ c, pderiv (w c) (X (w c) * g) = g + X (w c) * pderiv (w c) g := by
     intro c
-    rw [Derivation.leibniz, mvPolynomial_pderiv_X_self, smul_eq_mul, smul_eq_mul]
+    rw [Derivation.leibniz, pderiv_X_self, smul_eq_mul, smul_eq_mul]
     ring
   have h3 : ∀ c, pderiv (w c) ((∑ d, X (w d) * X (e d)) * pderiv (e c) g) =
       X (e c) * pderiv (e c) g + (∑ d, X (w d) * X (e d)) * pderiv (w c) (pderiv (e c) g) := by

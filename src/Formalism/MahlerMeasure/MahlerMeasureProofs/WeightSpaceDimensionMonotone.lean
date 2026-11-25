@@ -974,14 +974,11 @@ open MvPolynomial Finset Formalism.GM.M
 section Ops
 variable {K : Type} [CommRing K] {σ : Type} [DecidableEq σ]
 
-private theorem pderiv_comm_lemma (y y' : σ) (F : MvPolynomial σ K) :
-    pderiv y (pderiv y' F) = pderiv y' (pderiv y F) :=
-  _root_.MvPolynomial.pderiv_comm y y' F
-
 theorem XD_comm (x y x' y' : σ) (F : MvPolynomial σ K) :
     X x * pderiv y (X x' * pderiv y' F) - X x' * pderiv y' (X x * pderiv y F) =
       (if y = x' then X x * pderiv y' F else 0) - (if y' = x then X x' * pderiv y F else 0) := by
-  rw [Derivation.leibniz, Derivation.leibniz, pderiv_X, pderiv_X, pderiv_comm_lemma y y' F]
+  rw [Derivation.leibniz, Derivation.leibniz, pderiv_X, pderiv_X,
+    _root_.MvPolynomial.pderiv_comm y y' F]
   simp only [smul_eq_mul, Pi.single_apply, @eq_comm _ x' y, @eq_comm _ x y']
   split_ifs <;> ring
 
