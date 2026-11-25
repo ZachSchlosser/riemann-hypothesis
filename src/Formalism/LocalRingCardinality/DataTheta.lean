@@ -604,28 +604,15 @@ structure ThetaX (D : D7) : Type 1 where
   cusp : ∀ V, Submodule ℂ (AF V)
 
   pet : ∀ V, AF V → cusp V → ℂ
-  pet_add_left : ∀ V F F' G, pet V (F + F') G = pet V F G + pet V F' G
-  pet_smul_left : ∀ V (c : ℂ) F G, pet V (c • F) G = star c * pet V F G
-  pet_right : ∀ V F, IsLinearMap ℂ (pet V F)
-  pet_symm : ∀ V (F G : cusp V), pet V (F : AF V) G = star (pet V (G : AF V) F)
-  pet_pos : ∀ V (F : cusp V), F ≠ 0 → 0 < (pet V (F : AF V) F).re
 
   actR : ∀ V (τ : D.what₂.Tau), Matrix (Fin V.rank) (Fin V.rank) ℂ → Module.End ℂ (AF V)
-  actR_one : ∀ V τ, actR V τ 1 = 1
-  actR_mul : ∀ V τ, ∀ g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ), ∀ h ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ),
-    actR V τ (g * h) = actR V τ g * actR V τ h
-  actR_cusp : ∀ V τ, ∀ g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ), ∀ F ∈ cusp V, actR V τ g F ∈ cusp V
 
   Gf : HSp D → Type
   [gfGrp : ∀ V, Group (Gf V)]
   actF : ∀ V, Gf V →* Module.End ℂ (AF V)
-  actF_cusp : ∀ V g, ∀ F ∈ cusp V, actF V g F ∈ cusp V
-
-  actF_actR : ∀ V g τ h, actF V g * actR V τ h = actR V τ h * actF V g
 
   Ksph : ∀ V, Finset (IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers D.host.F)) →
     Subgroup (Gf V)
-  Ksph_mono : ∀ V S S', S ⊆ S' → Ksph V S' ≤ Ksph V S
 
   typ : ∀ V, (D.what₂.Tau → SPar) → Submodule ℂ (AF V)
 
@@ -633,14 +620,10 @@ structure ThetaX (D : D7) : Type 1 where
   [chrGrp : CommGroup Chr]
 
   infTy : Chr → D.what₂.Tau → ℚ
-  infTy_mul : ∀ χ χ' τ, infTy (χ * χ') τ = infTy χ τ + infTy χ' τ
 
   chrOf : D.what₂.Tup → ℕ → Chr
-  chrOf_inf : ∀ μ (j : Fin D.R.m) τ, infTy (chrOf μ (j.1 + 1)) τ = -(D.hc τ).e j
 
   etaT : Chr
-  etaT_inf : ∀ τ, infTy etaT τ = 1 / 2 ∨ infTy etaT τ = -(1 / 2)
-  etaT_pos : ∀ τ, infTy etaT τ = 1 / 2
 
   Sch : HSp D → HSp D → Type
   [schAdd : ∀ V W, AddCommGroup (Sch V W)]
@@ -653,48 +636,24 @@ structure ThetaX (D : D7) : Type 1 where
   th : ∀ V W, Chr → Chr → Sch V W →ₗ[ℂ] cusp V →ₗ[ℂ] AF W
 
   Xs : ℕ → ℕ → HSp D
-  Xs_rank : ∀ t j, j ≤ D.R.m → (Xs t j).rank = D.R.k + j * (t + 1)
-  Xs_sig : ∀ t j, j ≤ D.R.m → (Xs t j).SigOK ∧ (Xs t j).IsDefinite
 
   Ys : ℕ → ℕ → HSp D
-  Ys_rank : ∀ t j, j ≤ D.R.m → (Ys t j).rank = D.R.r + j * t
-  Ys_sig : ∀ t j, j ≤ D.R.m → (Ys t j).SigOK
 
   iXYs : ∀ t j, (Xs t j).V →ₗ[D.host.E] (Ys t j).V
-  iXYs_isom : ∀ t j, j < D.R.m → HSpace.IsIsomEmb (Xs t j) (Ys t j) (iXYs t j)
   iYXm : ∀ t, (Ys t D.R.m).V →ₗ[D.host.E] (Xs t D.R.m).V
-  iYXm_isom : ∀ t, HSpace.IsIsomEmb (Ys t D.R.m) (Xs t D.R.m) (iYXm t)
 
   YsLow : ℕ → ℕ → ℕ → HSp D
-  YsLow_zero : ∀ t j, YsLow t j 0 = Ys t j
-
-  Xs_rec : ∀ j, j ≤ D.R.m → Xs D.R.t j = D.sp.X j
-  Ys_rec : ∀ j, j ≤ D.R.m → Ys D.R.t j = D.sp.Y j
 
   conjAF : ∀ V, AF V → AF V
-  conjAF_add : ∀ V F F', conjAF V (F + F') = conjAF V F + conjAF V F'
-  conjAF_smul : ∀ V (c : ℂ) F, conjAF V (c • F) = star c • conjAF V F
-  conjAF_conjAF : ∀ V F, conjAF V (conjAF V F) = F
-  conjAF_cusp : ∀ V, ∀ F ∈ cusp V, conjAF V F ∈ cusp V
 
   Pos : ∀ (A B : HSp D), (A.V →ₗ[D.host.E] B.V) → Type
 
   FJd : ∀ (A B : HSp D), (A.V →ₗ[D.host.E] B.V) → Type
   [fjAdd : ∀ A B ι, AddCommGroup (FJd A B ι)]
-  [fjMod : ∀ A B ι, Module ℂ (FJd A B ι)]
 
   Bper : ∀ (A B : HSp D) (ι : A.V →ₗ[D.host.E] B.V), Pos A B ι → FJd A B ι → AF A → cusp B → ℂ
-  Bper_right : ∀ A B ι p s φ, IsLinearMap ℂ (Bper A B ι p s φ)
-  Bper_add_left : ∀ A B ι p s φ φ' F,
-    Bper A B ι p s (φ + φ') F = Bper A B ι p s φ F + Bper A B ι p s φ' F
-  Bper_smul_left : ∀ A B ι p s (c : ℂ) φ F, Bper A B ι p s (c • φ) F = star c * Bper A B ι p s φ F
-
-  Bper_odd : ∀ A B ι p, Odd (B.rank - A.rank) → ∀ s s' φ F, Bper A B ι p s φ F = Bper A B ι p s' φ F
 
   Btop : ∀ (A B : HSp D), (B.V →ₗ[D.host.E] A.V) → AF A → cusp B → ℂ
-  Btop_right : ∀ A B ι φ, IsLinearMap ℂ (Btop A B ι φ)
-  Btop_add_left : ∀ A B ι φ φ' F, Btop A B ι (φ + φ') F = Btop A B ι φ F + Btop A B ι φ' F
-  Btop_smul_left : ∀ A B ι (c : ℂ) φ F, Btop A B ι (c • φ) F = star c * Btop A B ι φ F
 
   pos1 : D.what₂.Word → Pos (D.sp.X 0) (D.sp.Y 0) (D.sp.iXY 0)
   posSym : D.what₂.Word → Pos (D.sp.X 0) (D.sp.Y 0) (D.sp.iXY 0)
@@ -708,14 +667,9 @@ structure ThetaX (D : D7) : Type 1 where
   PhiYup : ∀ (_μ : D.what₂.Tup) (j : ℕ), Sch (D.sp.Y j) (D.sp.Y (j + 1))
 
   mY : D.what₂.Tup → ℕ → ℝ
-  mY_pos : ∀ μ j, 0 < mY μ j
-
-  adelicDataRowMeasureScale_trivialTuple : ∀ j, mY D.what₂.mu0 j = 1
-
-  mY_zero : ∀ μ, mY μ 0 = 1
 
 attribute [instance] ThetaX.afAdd ThetaX.afMod ThetaX.gfGrp ThetaX.chrGrp ThetaX.schAdd ThetaX.schMod
-  ThetaX.fjAdd ThetaX.fjMod
+  ThetaX.fjAdd
 
 namespace ThetaX
 

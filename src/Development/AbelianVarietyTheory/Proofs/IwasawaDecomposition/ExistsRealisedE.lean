@@ -972,8 +972,6 @@ theorem actReal_apply (hθ : IsInfFam θ) (V : HSp D) (τ) {g} (h : g ∈ Formal
     (actReal hθ V τ g F).1 x = F.1 (x * atTau θ V τ g) := by
   rw [actReal, dif_pos h]; rfl
 
-alias mul_mem_UH := _root_.GlobalTheory.PointAtPlaceHom.mul_mem_UH
-
 def chrGrp (D : D7) : Subgroup (IdC D) := (GlobalTheory.T.heckeCharacter_infinityExponent_group_laws D).1.choose
 
 theorem mem_chrGrp {χ : IdC D} : χ ∈ chrGrp D ↔ IsHC D χ := (GlobalTheory.T.heckeCharacter_infinityExponent_group_laws D).1.choose_spec χ
@@ -1033,20 +1031,6 @@ theorem inr_ne (A B : HSp D) (ι : A.V →ₗ[D.host.E] B.V) (x : D.what₂.Word
   cases h
   intro h
   cases eq_of_heq h
-
-section Scale
-
-variable {P Q R : Type} [AddCommGroup P] [Module ℂ P] [AddCommGroup Q] [Module ℂ Q] [AddCommGroup R] [Module ℂ R]
-  (a : ℂ) (b : P →ₗ⋆[ℂ] Q →ₗ[ℂ] ℂ) (e : R ≃ₗ[ℂ] Q)
-
-theorem ses_add (x x' : P) (y : Q) : a * b (x + x') y = a * b x y + a * b x' y := by simp [mul_add]
-
-theorem ses_smul (c : ℂ) (x : P) (y : Q) : a * b (c • x) y = star c * (a * b x y) := by simp [mul_left_comm]
-
-theorem ses_right (x : P) : IsLinearMap ℂ fun y : R => a * b x (e y) :=
-  ⟨fun G G' => by simp [mul_add], fun c G => by simp [mul_left_comm]⟩
-
-end Scale
 
 section Record
 
@@ -1257,86 +1241,29 @@ abbrev recXE : ThetaX D where
   AF V := AFs θ V
   cusp V := cuspIn θ V
   pet V F G := (Rc.petC V : ℂ) * petForm hP hθ V F (cuspEq θ V G)
-  pet_add_left V F F' G := ses_add _ _ _ _ _
-  pet_smul_left V c F G := ses_smul _ _ _ _ _
-  pet_right V F := ses_right _ _ _ _
-  pet_symm V F G := by
-    rw [petForm_apply, petForm_apply, star_mul', Complex.star_def, Complex.conj_ofReal, ← integral_conj]
-    congr 2
-    funext g
-    rw [map_mul, mul_comm]
-    exact congrArg₂ _ (star_star _).symm rfl
-  pet_pos V F hF := by
-    have h := GlobalTheory.T.petersson_normSq_pos_automorphicFunction_unitary D V _ _ (quot_mu V) F.1.1 (aut hθ F.1).toIsAutFun
-      (fun h => hF (Subtype.ext (Subtype.ext h)))
-      (hP θ hθ V _ _ (quot_mu V) _ _ (aut hθ F.1) (cuspF hθ (cuspEq θ V F)))
-    rw [Complex.re_ofReal_mul]
-    exact mul_pos (mul_pos (Rc.petF_pos V) (Finset.prod_pos fun _ _ => Rc.meas.petR_pos _ _)) h
   actR := actReal hθ
-  actR_one V τ := LinearMap.ext fun F => Subtype.ext <| funext fun x => by
-    rw [actReal_apply hθ V τ (by simp [Formalism.QuantumDeterminants.UH]), (GlobalTheory.PointAtPlaceHom.atTau_laws D θ hθ V τ).2.1, mul_one]; rfl
-  actR_mul V τ g hg h hh := LinearMap.ext fun F => Subtype.ext <| funext fun x => by
-    rw [mul_apply_eq_comp, actReal_apply hθ V τ hg, actReal_apply hθ V τ hh, actReal_apply hθ V τ (mul_mem_UH hg hh),
-      (GlobalTheory.PointAtPlaceHom.atTau_laws D θ hθ V τ).2.2.1 g hg h hh, mul_assoc]
-  actR_cusp V τ g hg F hF := by
-    rw [actReal, dite_eq_left hg]; exact trE_cusp hθ V _ _ F hF
   Gf V := GfC V
   actF := actFin hθ
-  actF_cusp V g F hF := trE_cusp hθ V g (fun φ h => GlobalTheory.T.smoothAutomorphicForm_rightTranslate_finiteAdelic D θ hθ V φ h g g.2) F hF
-  actF_actR V g τ h := by
-    unfold actReal
-    split_ifs with hh
-    · refine LinearMap.ext fun F => Subtype.ext <| funext fun x => ?_
-      change F.1 (x * g * atTau θ V τ h) = F.1 (x * atTau θ V τ h * g)
-      rw [mul_assoc, mul_assoc, (GlobalTheory.PointAtPlaceHom.atTau_laws D θ hθ V τ).2.2.2.1 h g g.2]
-    · rw [mul_one, one_mul]
   Ksph := ksph
-  Ksph_mono V S S' h g hg := mem_ksph.2 ((GlobalTheory.T.exists_lattice_stabiliser_subgroup_outside_places D V S).choose_spec.2 S' h (mem_ksph.1 hg))
   typ V P := (TypS θ V P).comap (AFs θ V).subtype
   Chr := chrGrp D
   infTy := expo
-  infTy_mul χ χ' τ := expo_eq ((GlobalTheory.T.heckeCharacter_infinityExponent_group_laws D).2.2 _ _ _ _ _ (expo_spec χ τ) (expo_spec χ' τ))
   chrOf μ j := ⟨Rc.chr μ j, mem_chrGrp.2 (Rc.chr_hc μ j)⟩
-  chrOf_inf μ j τ := expo_eq (Rc.chr_inf μ j τ)
   etaT := ⟨Rc.eta, mem_chrGrp.2 ⟨Rc.eta_hc, fun τ => ⟨_, Rc.eta_inf τ⟩⟩⟩
-  etaT_inf τ := Or.inl (expo_eq (Rc.eta_inf τ))
-  etaT_pos τ := expo_eq (Rc.eta_inf τ)
   Sch V W := ThS ψ V W
   fact V W := {Φ | IsPureFun ψ V W Φ.1}
   kfin V W := KfinS ψ θ Rc.dec V W
   th V W χ χ' := (Rc.petC V : ℂ) • (exists_liftE hL hE hθ hψ Wf hW V W χ.1 χ'.1).choose.compl₂ (cuspEq θ V).toLinearMap
   Xs := Tw.Xs
-  Xs_rank := Tw.Xs_rank
-  Xs_sig t j hj := ⟨(Tw.Xs_sig t j hj).1, fun τ => Or.inl ((Tw.Xs_sig t j hj).2 τ)⟩
   Ys := Tw.Ys
-  Ys_rank := Tw.Ys_rank
-  Ys_sig t j hj := (Tw.Ys_sig t j hj).1
   iXYs := Tw.iXYs
-  iXYs_isom := Tw.iXYs_isom
   iYXm := Tw.iYXm
-  iYXm_isom := Tw.iYXm_isom
   YsLow := Tw.YsLow
-  YsLow_zero := Tw.YsLow_zero
-  Xs_rec := Tw.Xs_rec
-  Ys_rec := Tw.Ys_rec
   conjAF V F := ⟨fun g => star (F.1 g), Submodule.subset_span (GlobalTheory.T.isSmoothAutomorphicFunction_star D θ hθ V _ (aut hθ F))⟩
-  conjAF_add V F F' := Subtype.ext (funext fun g => star_add _ _)
-  conjAF_smul V c F := Subtype.ext (funext fun g => star_mul' _ _)
-  conjAF_conjAF V F := Subtype.ext (funext fun g => star_star _)
-  conjAF_cusp V F hF := by
-    rw [mem_cuspIn hθ] at hF ⊢
-    exact (GlobalTheory.T.isCuspFunction_closed_under_operations D V _ _ (aut hθ F).toIsAutFun (aut hθ F).toIsAutFun hF hF).2.2.2
   Pos A B ι := PosT A B ι
   FJd _ _ _ := ℂ
   Bper A B ι p _ φ F := (Rc.petC A : ℂ) * perT hB hθ hψ Rc A B ι p φ (cuspEq θ B F)
-  Bper_right A B ι p s φ := ses_right _ _ _ _
-  Bper_add_left A B ι p s φ φ' F := ses_add _ _ _ _ _
-  Bper_smul_left A B ι p s c φ F := ses_smul _ _ _ _ _
-  Bper_odd _ _ _ _ _ _ _ _ _ := rfl
   Btop A B ι φ F := (Rc.petC B : ℂ) * (exists_top hT hθ A B ι).choose φ (cuspEq θ B F)
-  Btop_right A B ι φ := ses_right _ _ _ _
-  Btop_add_left A B ι φ φ' F := ses_add _ _ _ _ _
-  Btop_smul_left A B ι c φ F := ses_smul _ _ _ _ _
   pos1 u := .inr (u, ⟨rfl⟩)
   posSym u := .inl fun _ => bes0 u
   colAF u μ j := (cuspEq θ _).symm.toLinearMap.comp (Rc.col u μ j)
@@ -1344,9 +1271,6 @@ abbrev recXE : ThetaX D where
   PhiY := Rc.Phi
   PhiYup μ j := transp (Rc.Phi μ j)
   mY := Rc.mY
-  mY_pos := Rc.mY_pos
-  adelicDataRowMeasureScale_trivialTuple := Rc.adelicDataRowMeasureScale_trivialTuple
-  mY_zero := Rc.mY_zero
 
 abbrev recTE : ThetaTied D (recXE hP hT hB hL hE hθ hψ Wf hW Tw Rc) where
   ev V := (AFs θ V).subtype
