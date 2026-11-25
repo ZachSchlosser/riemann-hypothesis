@@ -64,18 +64,13 @@ section Alg
 
 variable {K : Type} [Field K]
 
-private theorem hasSubst_finite_of_constantCoeff_eq_zero {σ τ : Type} [Finite σ] {a : σ → MvPowerSeries τ K}
-    (ha : ∀ s, constantCoeff (a s) = 0) : HasSubst a := by
-  first
-  | exact MvPowerSeries.hasSubst_of_constantCoeff_zero ha
-
 theorem hs2 {τ : Type} {a b : MvPowerSeries τ K} (ha : constantCoeff a = 0)
     (hb : constantCoeff b = 0) : HasSubst ![a, b] := by
-  exact hasSubst_finite_of_constantCoeff_eq_zero fun i => by fin_cases i <;> first | exact ha | exact hb
+  exact MvPowerSeries.hasSubst_of_constantCoeff_zero fun i => by fin_cases i <;> first | exact ha | exact hb
 
 theorem hs3 {τ : Type} {a b c : MvPowerSeries τ K} (ha : constantCoeff a = 0)
     (hb : constantCoeff b = 0) (hc : constantCoeff c = 0) : HasSubst ![a, b, c] := by
-  exact hasSubst_finite_of_constantCoeff_eq_zero fun i => by fin_cases i <;> first | exact ha | exact hb | exact hc
+  exact MvPowerSeries.hasSubst_of_constantCoeff_zero fun i => by fin_cases i <;> first | exact ha | exact hb | exact hc
 
 theorem subst_subst1 {ι κ : Type} {b : ι → MvPowerSeries κ K} (hb : HasSubst b)
     {a : MvPowerSeries ι K} (ha : PowerSeries.HasSubst a) (f : PowerSeries K) :
@@ -109,7 +104,7 @@ theorem cc_ps {τ : Type} {a : MvPowerSeries τ K} (ha : constantCoeff a = 0) {f
 theorem ps_comp {τ : Type} {a : MvPowerSeries τ K} (ha : constantCoeff a = 0) {e : PowerSeries K}
     (he : PowerSeries.constantCoeff e = 0) (f : PowerSeries K) :
     PowerSeries.subst (PowerSeries.subst a e) f = PowerSeries.subst a (PowerSeries.subst e f) := by
-  have h1 : HasSubst (fun _ : Unit => a) := hasSubst_finite_of_constantCoeff_eq_zero fun _ => ha
+  have h1 : HasSubst (fun _ : Unit => a) := MvPowerSeries.hasSubst_of_constantCoeff_zero fun _ => ha
   exact (subst_subst1 h1 (PowerSeries.HasSubst.of_constantCoeff_zero he) f).symm
 
 theorem cc_lgF {l : ℕ} (_hl : 2 ≤ l) : PowerSeries.constantCoeff (lgF K l) = 0 := by
@@ -291,7 +286,7 @@ open Pair
 theorem subst_tilde : SubstTil := by
   unfold SubstTil
   intro K _ l d _ σ _hl be0 ι _ om oms τ _ L hL0
-  have hL : HasSubst L := hasSubst_finite_of_constantCoeff_eq_zero hL0
+  have hL : HasSubst L := MvPowerSeries.hasSubst_of_constantCoeff_zero hL0
   unfold beTil
   rw [subst_sum hL]
   refine Finset.sum_congr rfl fun r _ => ?_
@@ -304,7 +299,7 @@ private theorem constantCoeff_subst_vec_pair_eq_zero {K : Type} [Field K] {τ : 
   have hx : ∀ i : Fin 2, constantCoeff (![a, b] i) = 0 := by
     intro i; fin_cases i <;> first | exact ha | exact hb
   first
-  | exact constantCoeff_subst_eq_zero (hasSubst_finite_of_constantCoeff_eq_zero hx) hx hF0
+  | exact constantCoeff_subst_eq_zero (MvPowerSeries.hasSubst_of_constantCoeff_zero hx) hx hF0
 
 theorem PairRules_of (hE : ExpSpec) (hIP : IPLemma) : PairRules := by
   have hS : SimeqRules := by

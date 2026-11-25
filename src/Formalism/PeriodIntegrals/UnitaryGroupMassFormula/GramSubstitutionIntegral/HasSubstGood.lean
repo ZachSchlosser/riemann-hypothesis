@@ -61,16 +61,11 @@ section Exact
 
 variable {σ τ : Type*}
 
-private theorem hasSubst_of_constantCoeff_eq_zero_gram_substitution_integral {κ ι : Type*} [Finite ι] {a : ι → MvPowerSeries κ ℂ_[p]}
-    (ha : ∀ i, MvPowerSeries.constantCoeff (a i) = 0) : MvPowerSeries.HasSubst a := by
-  first
-  | exact MvPowerSeries.hasSubst_of_constantCoeff_zero ha
-
 theorem subst_psubst {s : τ → MvPowerSeries σ ℂ_[p]} (hs : MvPowerSeries.HasSubst s)
     {a : MvPowerSeries τ ℂ_[p]} (ha : MvPowerSeries.constantCoeff a = 0) (f : PowerSeries ℂ_[p]) :
     MvPowerSeries.subst s (PowerSeries.subst a f) = PowerSeries.subst (MvPowerSeries.subst s a) f := by
   have haS : MvPowerSeries.HasSubst (fun _ : Unit => a) :=
-    hasSubst_of_constantCoeff_eq_zero_gram_substitution_integral (fun _ => ha)
+    MvPowerSeries.hasSubst_of_constantCoeff_zero (fun _ => ha)
   unfold PowerSeries.subst
   exact MvPowerSeries.subst_comp_subst_apply haS hs f
 
@@ -183,7 +178,7 @@ theorem cc_X {σ : Type*} (i : σ) : MvPowerSeries.constantCoeff (Xv (p := p) i)
   | exact MvPowerSeries.constantCoeff_X i
 
 theorem hasSubst_good {σ τ : Type*} [Finite τ] {s : τ → MvPowerSeries σ ℂ_[p]} (hs : ∀ i, Good (s i)) :
-    MvPowerSeries.HasSubst s := hasSubst_of_constantCoeff_eq_zero_gram_substitution_integral (fun i => (hs i).1)
+    MvPowerSeries.HasSubst s := MvPowerSeries.hasSubst_of_constantCoeff_zero (fun i => (hs i).1)
 
 theorem goodAdd : GoodAdd := by
   intro p _ l ex ph S H σ a b ha hb

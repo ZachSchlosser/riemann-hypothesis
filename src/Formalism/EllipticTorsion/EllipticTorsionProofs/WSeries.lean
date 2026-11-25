@@ -212,10 +212,6 @@ theorem mv_eq_zero {σ : Type*} {d e : MvPowerSeries σ R}
     rw [mul_sub, mul_one, ← h, sub_self]
   exact hu.mul_left_eq_zero.mp h0
 
-private theorem hasSubst_of_constantCoeff_eq_zero_elliptic_torsion {σ : Type} {s : MvPowerSeries σ R}
-    (hs : MvPowerSeries.constantCoeff s = 0) : PowerSeries.HasSubst s :=
-  PowerSeries.HasSubst.of_constantCoeff_zero hs
-
 private theorem substAlgHom_apply' {σ : Type} {s : MvPowerSeries σ R} (ha : PowerSeries.HasSubst s)
     (f : PowerSeries R) : PowerSeries.substAlgHom ha f = f.subst s :=
   congrFun (PowerSeries.coe_substAlgHom ha) f
@@ -236,13 +232,13 @@ private theorem substAlgHom_C {σ : Type} {s : MvPowerSeries σ R} (ha : PowerSe
 private theorem constantCoeff_subst_eq_zero_elliptic_torsion {w : PowerSeries R} (hw0 : constantCoeff w = 0)
     {σ : Type} (s : MvPowerSeries σ R) (hs : MvPowerSeries.constantCoeff s = 0) :
     MvPowerSeries.constantCoeff (w.subst s) = 0 := by
-  have ha := hasSubst_of_constantCoeff_eq_zero_elliptic_torsion hs
+  have ha := PowerSeries.HasSubst.of_constantCoeff_zero hs
   obtain ⟨w₁, hw₁⟩ := X_dvd_iff.mpr hw0
   rw [← substAlgHom_apply' ha, hw₁, map_mul, substAlgHom_X' ha, map_mul, hs, zero_mul]
 
 theorem subst_eq {w : PowerSeries R} (hw : WFixed W w) {σ : Type} (s : MvPowerSeries σ R)
     (hs : MvPowerSeries.constantCoeff s = 0) : WEqAt W s (w.subst s) := by
-  have ha := hasSubst_of_constantCoeff_eq_zero_elliptic_torsion hs
+  have ha := PowerSeries.HasSubst.of_constantCoeff_zero hs
   have e := congrArg (PowerSeries.substAlgHom ha) hw.2
   simp only [map_add (f := _), map_mul, map_pow, substAlgHom_C ha, substAlgHom_X' ha] at e
   rw [substAlgHom_apply' ha] at e

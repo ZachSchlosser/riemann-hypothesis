@@ -91,11 +91,6 @@ theorem constantCoeff_lin {d : ℕ} {I : Fin 2 → Type} [∀ g, Fintype (I g)] 
     | rw [map_smul, coeff_tyS_mv]
   simp
 
-private theorem hasSubst_of_constantCoeff_eq_zero' {σ τ : Type} [Finite σ] {a : σ → MvPowerSeries τ C}
-    (ha : ∀ s, MvPowerSeries.constantCoeff (a s) = 0) : MvPowerSeries.HasSubst a := by
-  first
-    | exact MvPowerSeries.hasSubst_of_constantCoeff_zero ha
-
 theorem lim_mem {d : ℕ} {I : Fin 2 → Type} [∀ g, Fintype (I g)] {κ : Type} [Fintype κ] (X : RawChart C d I κ)
     (hl : 2 ≤ V.l)
     (hlg0 : ∀ i, MvPowerSeries.constantCoeff (X.lg i) = 0) (hex0 : ∀ i, MvPowerSeries.constantCoeff (X.ex i) = 0)
@@ -125,11 +120,11 @@ theorem lim_mem {d : ℕ} {I : Fin 2 → Type} [∀ g, Fintype (I g)] {κ : Type
     exact tendsS_sum Finset.univ (fun c _ => tendsS_smul (X.u g c i)
       (tendsS_tyS (a := fun k s => x k s (Sum.inl c)) (a' := fun s => x' s (Sum.inl c)) V.l
         (fun s w => hlim w s (Sum.inl c))))
-  have hHSlg : MvPowerSeries.HasSubst X.lg := hasSubst_of_constantCoeff_eq_zero' hlg0
-  have hHSex : MvPowerSeries.HasSubst X.ex := hasSubst_of_constantCoeff_eq_zero' hex0
+  have hHSlg : MvPowerSeries.HasSubst X.lg := MvPowerSeries.hasSubst_of_constantCoeff_zero hlg0
+  have hHSex : MvPowerSeries.HasSubst X.ex := MvPowerSeries.hasSubst_of_constantCoeff_zero hex0
   have hHS : ∀ k, MvPowerSeries.HasSubst (γk k) := fun k =>
-    hasSubst_of_constantCoeff_eq_zero' (fun i => (hγk k i).1)
-  have hHST' : MvPowerSeries.HasSubst T' := hasSubst_of_constantCoeff_eq_zero' hT'0
+    MvPowerSeries.hasSubst_of_constantCoeff_zero (fun i => (hγk k i).1)
+  have hHST' : MvPowerSeries.HasSubst T' := MvPowerSeries.hasSubst_of_constantCoeff_zero hT'0
   have hγeq : ∀ k i, γk k i = MvPowerSeries.subst (T k) (X.ex i) := by
     intro k i
     have e1 : T k = fun j => MvPowerSeries.subst (γk k) (X.lg j) := by

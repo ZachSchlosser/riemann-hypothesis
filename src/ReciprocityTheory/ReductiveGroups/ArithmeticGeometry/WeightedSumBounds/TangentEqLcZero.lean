@@ -27,17 +27,12 @@ def intRing (v : AddValuation C (WithTop ℝ)) : Subring C where
 theorem mem_intRing {v : AddValuation C (WithTop ℝ)} {x : C} :
     x ∈ intRing v ↔ IsIntV v x := Iff.rfl
 
-private theorem hs_lemma_2 {σ τ : Type} [Finite σ] {a : σ → MvPowerSeries τ C}
-    (ha0 : ∀ s, constantCoeff (a s) = 0) : HasSubst a := by
-  first
-  | exact hasSubst_of_constantCoeff_zero ha0
-
 theorem mvIsInt_subst {σ τ : Type} [Finite σ] (v : AddValuation C (WithTop ℝ))
     {f : MvPowerSeries σ C} (hf : MvIsInt v f) {a : σ → MvPowerSeries τ C}
     (ha : ∀ s, MvIsInt v (a s)) (ha0 : ∀ s, constantCoeff (a s) = 0) :
     MvIsInt v (subst a f) := by
   classical
-  have hS : HasSubst a := hs_lemma_2 ha0
+  have hS : HasSubst a := hasSubst_of_constantCoeff_zero ha0
   have hmul : ∀ p q : MvPowerSeries τ C, MvIsInt v p → MvIsInt v q → MvIsInt v (p * q) := by
     intro p q hp hq e
     rw [coeff_mul]
@@ -80,7 +75,7 @@ theorem psIsInt_iff {v : AddValuation C (WithTop ℝ)} {f : PowerSeries C} :
 
 variable {v : AddValuation C (WithTop ℝ)} {d : ℕ}
 
-theorem hasSubst_F (G : LogFGL v d) : HasSubst G.F := hs_lemma_2 G.F_const
+theorem hasSubst_F (G : LogFGL v d) : HasSubst G.F := hasSubst_of_constantCoeff_zero G.F_const
 
 theorem isCurve_zero : IsCurve v (0 : Fin d → PowerSeries C) := by
   intro a
@@ -91,7 +86,7 @@ private theorem cc_lemma_3 {σ τ : Type} [Finite σ] {f : MvPowerSeries σ C}
     (hf : constantCoeff f = 0) {a : σ → MvPowerSeries τ C}
     (ha0 : ∀ s, constantCoeff (a s) = 0) : constantCoeff (subst a f) = 0 := by
   classical
-  rw [← coeff_zero_eq_constantCoeff_apply, coeff_subst (hs_lemma_2 ha0)]
+  rw [← coeff_zero_eq_constantCoeff_apply, coeff_subst (hasSubst_of_constantCoeff_zero ha0)]
   apply finsum_eq_zero_of_forall_eq_zero
   intro e
   by_cases he : e = 0
@@ -126,11 +121,11 @@ theorem lgCurve_add (G : LogFGL v d) {ga gb : Fin d → PowerSeries C}
     rintro (s | s)
     · exact ha s
     · exact hb s
-  have hE : HasSubst (Sum.elim ga gb) := hs_lemma_2 hE0
+  have hE : HasSubst (Sum.elim ga gb) := hasSubst_of_constantCoeff_zero hE0
   have hl : HasSubst (fun b : Fin d => (X (Sum.inl b) : MvPowerSeries (Fin d ⊕ Fin d) C)) :=
-    hs_lemma_2 (fun b => constantCoeff_X _)
+    hasSubst_of_constantCoeff_zero (fun b => constantCoeff_X _)
   have hr : HasSubst (fun b : Fin d => (X (Sum.inr b) : MvPowerSeries (Fin d ⊕ Fin d) C)) :=
-    hs_lemma_2 (fun b => constantCoeff_X _)
+    hasSubst_of_constantCoeff_zero (fun b => constantCoeff_X _)
   show subst (fun b => subst (Sum.elim ga gb) (G.F b)) (G.lg a) =
     subst ga (G.lg a) + subst gb (G.lg a)
   rw [← subst_comp_subst_apply (hasSubst_F G) hE, G.lg_F a, subst_add hE,
@@ -139,7 +134,7 @@ theorem lgCurve_add (G : LogFGL v d) {ga gb : Fin d → PowerSeries C}
 
 theorem lgCurve_zero (G : LogFGL v d) (a : Fin d) : G.lgCurve 0 a = 0 := by
   classical
-  have h0 : HasSubst (0 : Fin d → PowerSeries C) := hs_lemma_2 (fun _ => by simp)
+  have h0 : HasSubst (0 : Fin d → PowerSeries C) := hasSubst_of_constantCoeff_zero (fun _ => by simp)
   show subst (0 : Fin d → PowerSeries C) (G.lg a) = 0
   refine MvPowerSeries.ext fun e => ?_
   rw [coeff_subst h0, map_zero]

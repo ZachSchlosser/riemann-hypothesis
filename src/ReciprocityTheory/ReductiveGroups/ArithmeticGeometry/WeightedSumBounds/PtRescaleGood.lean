@@ -33,10 +33,6 @@ theorem ptc_elim_const {τ : Type*} {x y : Fin d → MvPowerSeries τ C}
   | inl s => exact hx s
   | inr s => exact hy s
 
-private theorem hs_lemma {σ τ : Type*} [Finite σ] {a : σ → MvPowerSeries τ C}
-    (ha : ∀ s, constantCoeff (a s) = 0) : HasSubst a :=
-  MvPowerSeries.hasSubst_of_constantCoeff_zero ha
-
 private theorem pc_lemma_9 {σ τ : Type*} {a : σ → MvPowerSeries τ C}
     (ha : ∀ s, constantCoeff (a s) = 0) {m : σ →₀ ℕ} (hm : m ≠ 0) :
     constantCoeff (m.prod fun s n => a s ^ n) = 0 := by
@@ -51,7 +47,7 @@ private theorem pc_lemma_9 {σ τ : Type*} {a : σ → MvPowerSeries τ C}
 private theorem cc_lemma_2 {σ τ : Type*} [Finite σ] {a : σ → MvPowerSeries τ C}
     (ha : ∀ s, constantCoeff (a s) = 0) (f : MvPowerSeries σ C) (hf : constantCoeff f = 0) :
     constantCoeff (subst a f) = 0 := by
-  rw [constantCoeff_subst (hs_lemma ha)]
+  rw [constantCoeff_subst (MvPowerSeries.hasSubst_of_constantCoeff_zero ha)]
   apply finsum_eq_zero_of_forall_eq_zero
   intro m
   by_cases hm : m = 0
@@ -72,7 +68,7 @@ private theorem int_lemma_3 {σ τ : Type*} [Finite σ] {a : σ → MvPowerSerie
     (f : MvPowerSeries σ C) (hf : MvIsInt v f) : subst a f ∈ ptIntSer v τ := by
   show ∀ e, coeff e (subst a f) ∈ ptIntSub v
   intro e
-  rw [coeff_subst (hs_lemma ha)]
+  rw [coeff_subst (MvPowerSeries.hasSubst_of_constantCoeff_zero ha)]
   apply fs_lemma_4
   intro m
   have hp : (m.prod fun s n => a s ^ n) ∈ ptIntSer v τ := by
@@ -103,12 +99,12 @@ theorem ptAdd_const (G : LogFGL v d) {τ : Type*} {x y : Fin d → MvPowerSeries
 theorem ptAdd_lg (G : LogFGL v d) {τ : Type*} {x y : Fin d → MvPowerSeries τ C}
     (hx : ∀ a, constantCoeff (x a) = 0) (hy : ∀ a, constantCoeff (y a) = 0) (a : Fin d) :
     subst (ptAdd G x y) (G.lg a) = subst x (G.lg a) + subst y (G.lg a) := by
-  have hxy := hs_lemma (ptc_elim_const hx hy)
-  have hF := hs_lemma G.F_const
+  have hxy := MvPowerSeries.hasSubst_of_constantCoeff_zero (ptc_elim_const hx hy)
+  have hF := MvPowerSeries.hasSubst_of_constantCoeff_zero G.F_const
   have hl : HasSubst (fun b : Fin d => (X (Sum.inl b) : MvPowerSeries (Fin d ⊕ Fin d) C)) :=
-    hs_lemma fun b => by simp
+    MvPowerSeries.hasSubst_of_constantCoeff_zero fun b => by simp
   have hr : HasSubst (fun b : Fin d => (X (Sum.inr b) : MvPowerSeries (Fin d ⊕ Fin d) C)) :=
-    hs_lemma fun b => by simp
+    MvPowerSeries.hasSubst_of_constantCoeff_zero fun b => by simp
   rw [show ptAdd G x y = fun s => subst (Sum.elim x y) (G.F s) from rfl,
     ← subst_comp_subst_apply hF hxy, G.lg_F a, subst_add hxy,
     subst_comp_subst_apply hl hxy, subst_comp_subst_apply hr hxy]
@@ -237,7 +233,7 @@ private theorem ag_lemma_15 {σ τ : Type*} [Finite σ] {x y : σ → MvPowerSer
     (r : MvPowerSeries σ C) (hr0 : constantCoeff r = 0)
     (hr1 : ∀ s, coeff (Finsupp.single s 1) r = 0) (e : τ →₀ ℕ) (he : e.degree ≤ n) :
     coeff e (subst x r) = coeff e (subst y r) := by
-  rw [coeff_subst (hs_lemma hx), coeff_subst (hs_lemma hy)]
+  rw [coeff_subst (MvPowerSeries.hasSubst_of_constantCoeff_zero hx), coeff_subst (MvPowerSeries.hasSubst_of_constantCoeff_zero hy)]
   apply finsum_congr
   intro m
   by_cases h0 : m = 0
@@ -261,8 +257,8 @@ theorem pt_agree_of_lg (G : LogFGL v d) {τ : Type*} {x y : Fin d → MvPowerSer
     (hx : ∀ a, constantCoeff (x a) = 0) (hy : ∀ a, constantCoeff (y a) = 0) (k : ℕ)
     (h : ∀ a (e : τ →₀ ℕ), e.degree < k →
       coeff e (subst x (G.lg a)) = coeff e (subst y (G.lg a))) : PTAgree k x y := by
-  have hsx := hs_lemma hx
-  have hsy := hs_lemma hy
+  have hsx := MvPowerSeries.hasSubst_of_constantCoeff_zero hx
+  have hsy := MvPowerSeries.hasSubst_of_constantCoeff_zero hy
   have hr0 : ∀ i, constantCoeff (G.lg i - X i) = 0 := fun i => by simp [G.lg_const i]
   have hr1 : ∀ i s, coeff (Finsupp.single s 1) (G.lg i - X i) = 0 := fun i s => by
     rw [map_sub, G.lg_lin]
@@ -310,8 +306,8 @@ private theorem rp_lemma_7 (c : C) (ga : Fin d → PowerSeries C) (m : Fin d →
 theorem pt_lg_rescale (G : LogFGL v d) (c : C) {ga : Fin d → PowerSeries C}
     (h0 : ∀ b, constantCoeff (ga b) = 0) (a : Fin d) :
     G.lgCurve (rescaleCurve c ga) a = PowerSeries.rescale c (G.lgCurve ga a) := by
-  have hs : HasSubst ga := hs_lemma h0
-  have hs' : HasSubst (rescaleCurve c ga) := hs_lemma fun b => rc_lemma_8 c (ga b) (h0 b)
+  have hs : HasSubst ga := MvPowerSeries.hasSubst_of_constantCoeff_zero h0
+  have hs' : HasSubst (rescaleCurve c ga) := MvPowerSeries.hasSubst_of_constantCoeff_zero fun b => rc_lemma_8 c (ga b) (h0 b)
   refine MvPowerSeries.ext fun e => ?_
   obtain ⟨n, rfl⟩ : ∃ n, e = Finsupp.single () n := ⟨e (), Finsupp.unique_single e⟩
   rw [rs_lemma_6, show G.lgCurve (rescaleCurve c ga) a = subst (rescaleCurve c ga) (G.lg a) from rfl,

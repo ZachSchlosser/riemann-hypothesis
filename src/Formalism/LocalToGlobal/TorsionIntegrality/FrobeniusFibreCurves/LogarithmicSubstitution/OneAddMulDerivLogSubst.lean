@@ -194,16 +194,12 @@ theorem exp_biv :
       constantCoeff_powerSeries_subst_mv_eq _ h1]
     simp
 
-private theorem hasSubst_of_forall_constantCoeff_eq_zero {σ τ : Type} [Finite σ] {a : σ → MvPowerSeries τ K}
-    (h : ∀ s, MvPowerSeries.constantCoeff (a s) = 0) : MvPowerSeries.HasSubst a := by
-  exact MvPowerSeries.hasSubst_of_constantCoeff_zero h
-
 theorem psubst_msubst {ι κ : Type} (φ : PowerSeries K) {u : MvPowerSeries ι K}
     (hu : MvPowerSeries.constantCoeff u = 0) {b : ι → MvPowerSeries κ K}
     (hb : MvPowerSeries.HasSubst b) :
     MvPowerSeries.subst b (φ.subst u) = φ.subst (MvPowerSeries.subst b u) := by
   have hu' : MvPowerSeries.HasSubst (fun _ : Unit => u) :=
-    hasSubst_of_forall_constantCoeff_eq_zero (fun _ => hu)
+    MvPowerSeries.hasSubst_of_constantCoeff_zero (fun _ => hu)
   unfold PowerSeries.subst
   rw [MvPowerSeries.subst_comp_subst_apply hu' hb]
 
@@ -216,7 +212,7 @@ variable {K : Type} [Field K] [CharZero K] {ι : Type}
 theorem fExp_add {f g : MvPowerSeries ι K} (hf : MvPowerSeries.constantCoeff f = 0)
     (hg : MvPowerSeries.constantCoeff g = 0) : fExp (f + g) = fExp f * fExp g := by
   have hb : MvPowerSeries.HasSubst ![f, g] :=
-    hasSubst_of_forall_constantCoeff_eq_zero (fun i => by fin_cases i <;> simpa)
+    MvPowerSeries.hasSubst_of_constantCoeff_zero (fun i => by fin_cases i <;> simpa)
   have h0 : MvPowerSeries.constantCoeff (MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K) = 0 := by simp
   have h1 : MvPowerSeries.constantCoeff (MvPowerSeries.X 1 : MvPowerSeries (Fin 2) K) = 0 := by simp
   have h01 : MvPowerSeries.constantCoeff
@@ -276,14 +272,14 @@ theorem subst_fExp {κ : Type} [Finite ι] {φ : ι → MvPowerSeries κ K}
     (hφ : ∀ i, MvPowerSeries.constantCoeff (φ i) = 0) {f : MvPowerSeries ι K}
     (hf : MvPowerSeries.constantCoeff f = 0) :
     MvPowerSeries.subst φ (fExp f) = fExp (MvPowerSeries.subst φ f) :=
-  psubst_msubst _ hf (hasSubst_of_forall_constantCoeff_eq_zero hφ)
+  psubst_msubst _ hf (MvPowerSeries.hasSubst_of_constantCoeff_zero hφ)
 
 theorem subst_fLog {κ : Type} [Finite ι] {φ : ι → MvPowerSeries κ K}
     (hφ : ∀ i, MvPowerSeries.constantCoeff (φ i) = 0) {g : MvPowerSeries ι K}
     (hg : MvPowerSeries.constantCoeff g = 1) :
     MvPowerSeries.subst φ (fLog g) = fLog (MvPowerSeries.subst φ g) := by
   have hg1 : MvPowerSeries.constantCoeff (g - 1) = 0 := by simp [hg]
-  have hφ' : MvPowerSeries.HasSubst φ := hasSubst_of_forall_constantCoeff_eq_zero hφ
+  have hφ' : MvPowerSeries.HasSubst φ := MvPowerSeries.hasSubst_of_constantCoeff_zero hφ
   unfold fLog
   rw [psubst_msubst _ hg1 hφ', ← MvPowerSeries.coe_substAlgHom hφ', map_sub, map_one]
 

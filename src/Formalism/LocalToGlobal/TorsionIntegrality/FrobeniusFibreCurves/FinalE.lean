@@ -875,12 +875,8 @@ open MvPowerSeries
 
 variable {K : Type} [Field K] [CharZero K]
 
-private theorem hasSubst_fin_three_of_constantCoeff_eq_zero {a : Fin 3 → MvPowerSeries (Fin 3) K}
-    (ha : ∀ s, constantCoeff (a s) = 0) : HasSubst a := by
-  exact hasSubst_of_constantCoeff_zero ha
-
 theorem hasSubst_restrictThirdZero : HasSubst ![(X 0 : MvPowerSeries (Fin 3) K), X 1, 0] :=
-  hasSubst_fin_three_of_constantCoeff_eq_zero (fun s => by fin_cases s <;> simp)
+  hasSubst_of_constantCoeff_zero (fun s => by fin_cases s <;> simp)
 
 theorem restrictThirdZero_eq_rescale (h : MvPowerSeries (Fin 3) K) : ev3 h = rescale ![1, 1, 0] h := by
   rw [rescale_eq_subst]
@@ -1018,26 +1014,18 @@ theorem cc_shI (s : Fin 3) :
   fin_cases s <;> simp
 
 theorem hasSubst_sh : HasSubst ![(X 0 : MvPowerSeries (Fin 3) K), X 1 - X 2, X 2] :=
-  hasSubst_fin_three_of_constantCoeff_eq_zero cc_sh
+  hasSubst_of_constantCoeff_zero cc_sh
 
 theorem hasSubst_shI : HasSubst ![(X 0 : MvPowerSeries (Fin 3) K), X 1 + X 2, X 2] :=
-  hasSubst_fin_three_of_constantCoeff_eq_zero cc_shI
-
-private theorem subst_fin_three_mul {a : Fin 3 → MvPowerSeries (Fin 3) K} (ha : HasSubst a)
-    (f g : MvPowerSeries (Fin 3) K) : subst a (f * g) = subst a f * subst a g := by
-  exact subst_mul ha f g
+  hasSubst_of_constantCoeff_zero cc_shI
 
 theorem sh_mul (f g : MvPowerSeries (Fin 3) K) : sh (f * g) = sh f * sh g := by
   unfold sh
-  exact subst_fin_three_mul hasSubst_sh f g
-
-private theorem subst_fin_three_sub {a : Fin 3 → MvPowerSeries (Fin 3) K} (ha : HasSubst a)
-    (f g : MvPowerSeries (Fin 3) K) : subst a (f - g) = subst a f - subst a g := by
-  exact subst_sub ha f g
+  exact subst_mul hasSubst_sh f g
 
 theorem sh_sub (f g : MvPowerSeries (Fin 3) K) : sh (f - g) = sh f - sh g := by
   unfold sh
-  exact subst_fin_three_sub hasSubst_sh f g
+  exact subst_sub hasSubst_sh f g
 
 private theorem subst_X_fin_three_eq_self (h : MvPowerSeries (Fin 3) K) :
     subst (X : Fin 3 → MvPowerSeries (Fin 3) K) h = h := by
@@ -1050,7 +1038,7 @@ theorem shI_sh (h : MvPowerSeries (Fin 3) K) : shI (sh h) = h := by
   trans subst (X : Fin 3 → MvPowerSeries (Fin 3) K) h
   · congr 1
     funext s
-    fin_cases s <;> simp [subst_X hasSubst_shI, subst_fin_three_sub hasSubst_shI]
+    fin_cases s <;> simp [subst_X hasSubst_shI, subst_sub hasSubst_shI]
   · exact subst_X_fin_three_eq_self h
 
 theorem restrictThirdZero_shear (h : MvPowerSeries (Fin 3) K) : ev3 (sh h) = ev3 h := by
@@ -1058,7 +1046,7 @@ theorem restrictThirdZero_shear (h : MvPowerSeries (Fin 3) K) : ev3 (sh h) = ev3
   rw [subst_comp_subst_apply hasSubst_sh hasSubst_restrictThirdZero]
   congr 1
   funext s
-  fin_cases s <;> simp [subst_X hasSubst_restrictThirdZero, subst_fin_three_sub hasSubst_restrictThirdZero]
+  fin_cases s <;> simp [subst_X hasSubst_restrictThirdZero, subst_sub hasSubst_restrictThirdZero]
 
 theorem partialDeriv_two_shear (h : MvPowerSeries (Fin 3) K) : pd 2 (sh h) = sh (pd 2 h) - sh (pd 1 h) := by
   unfold sh Formalism.L2.Th1.B.pd
