@@ -1447,28 +1447,6 @@ end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowWindowLength =====
 
--- ===== clump member: Development.AutomorphicArithmetic.WeightCongruences.IffNum =====
--- clump-header: {"m": "Development.AutomorphicArithmetic.WeightCongruences.IffNum", "h": "module\n\npublic import Development.AutomorphicArithmetic.WeightCongruences.ProdNegOneZpow\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Bernstein\nimport Mathlib.Analysis.SpecialFunctions.Gamma.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Data.Nat.Choose.Multinomial\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\n\n"}
-section -- clump:auto
-@[expose] public section
-
-namespace UpperTheory.MUQ
-
-variable {E K : Type} [Field E] [Field K] {ι : Type} [Fintype ι] {φ : ι → E →+* K} {e : ι → ℚ}
-
-theorem num (h : MUQ φ e) : MU φ (fun i => (e i).num) := by
-  obtain ⟨a, ha, hMU⟩ := h
-  have : (fun i => (e i).num) = a := by
-    funext i
-    rw [ha i, Rat.num_intCast]
-  rw [this]
-  exact hMU
-
-end UpperTheory.MUQ
-end -- clump:auto
-end -- clump:auto
--- ===== end clump member: Development.AutomorphicArithmetic.WeightCongruences.IffNum =====
-
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExplicitConstantsParameterConditionsLarge =====
 -- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExplicitConstantsParameterConditionsLarge", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.PairRowIffQdRows\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExplicitChoiceRankKLowerUpperBounds\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExplicitChoiceRowWeightRatioAndLastCloudLeTwiceF\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HalfLeAbsNodeSubMid\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LogfSqLeRS\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RankRowsOfCrudeBounds\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RbSNumeric\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowAndImp\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowCardWordsLe\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowCloudLe\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowCloudUnitLower\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowEtaBounds\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowEtaLeW\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowExact\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowGapFunFN\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowLStar\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowNodeGap\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowPrimesConductor\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowThinSizeGe\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowTopsBandBottoms\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowTypePrimes\npublic import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowWindowLength\npublic import Development.AutomorphicArithmetic.WeightCongruences.IffNum\nimport Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowSigGaps\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Complex.UpperHalfPlane.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Basify\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Std.Tactic.BVDecide.Normalize.Prop\n\n"}
 section -- clump:auto
@@ -1540,30 +1518,29 @@ theorem explicitConstants_parameterConditions_large :
   obtain ⟨p_CkLow, p_Ck6, p_CfL, p_cLL, p_CnW, p_Crho, p_CDelG, p_CLw, p_Cj0, p_Cw, p_cw, p_CDel, p_CCount, p_Ch0r, p_Ch0k, p_Ch0N, p_Cgap, p_CetaF, p_CY, p_CYL, p_Cpde, p_CccK, p_CF, -⟩ := hp
   exact ⟨
     { CkLow := C.P.CkLow, CkLow_pos := p_CkLow
-      Ck6 := C.P.Ck6, Ck6_pos := p_Ck6
+      Ck6 := C.P.Ck6
       CfL := C.P.CfL, CfL_pos := p_CfL
-      cLL := C.P.cLL, cLL_pos := p_cLL
-      CnW := C.P.CnW, CnW_pos := p_CnW
+      cLL := C.P.cLL
+      CnW := C.P.CnW
       Crho := C.P.Crho, Crho_pos := p_Crho
-      CDelG := C.P.CDelG, CDelG_pos := p_CDelG
+      CDelG := C.P.CDelG
       CLw := C.P.CLw, CLw_pos := p_CLw
-      Cj0 := C.P.Cj0, Cj0_pos := p_Cj0
+      Cj0 := C.P.Cj0
       Cw := C.P.Cw, Cw_pos := p_Cw
-      cw := C.P.cw, cw_pos := p_cw
+      cw := C.P.cw
       CDel := C.P.CDel, CDel_pos := p_CDel
       CCount := C.P.CCount, CCount_pos := p_CCount
       Ch0r := C.P.Ch0r, Ch0r_pos := p_Ch0r
-      Ch0k := C.P.Ch0k, Ch0k_pos := p_Ch0k
-      Ch0N := C.P.Ch0N, Ch0N_pos := p_Ch0N
+      Ch0k := C.P.Ch0k
+      Ch0N := C.P.Ch0N
       Cgap := C.P.Cgap, Cgap_pos := p_Cgap
-      CetaF := C.P.CetaF, CetaF_pos := p_CetaF
+      CetaF := C.P.CetaF
       CY := C.P.CY, CY_pos := p_CY
       CYL := C.P.CYL, CYL_pos := p_CYL
-      Cpde := C.P.Cpde, Cpde_pos := p_Cpde
-      CccK := C.P.CccK, CccK_pos := p_CccK
-      CF := C.P.CF, CF_pos := p_CF
+      Cpde := C.P.Cpde
+      CccK := C.P.CccK
+      CF := C.P.CF
       qd_pow := h_qd_pow
-      logq_ge := h_logq_ge
       logDerivative_le_power := h_dlogL1_le
       condE_le := h_condE_le
       pde_log := h_pde_log
@@ -1572,58 +1549,40 @@ theorem explicitConstants_parameterConditions_large :
       radius_ge_sqrt_ratio := h_R0_ge
       k_ge_m2L := h_k_ge_m2L
       k_ge_mx := h_k_ge_mx
-      klogk := h_klogk
-      flogk := h_flogk
       logf_le := h_logf_le
-      log_sq_conductor_le := h_log2f_le
-      loglogb := h_loglogb
-      nW_ge := h_nW_ge
       eta_le := h_eta_le
       logeta := h_logeta
       t_le_eta := h_t_le_eta
       teta := h_teta
       mteta := h_mteta
-      mSeta := h_mSeta
       Neta := h_Neta
-      eta2 := h_eta2
       kS_le := h_kS_le
       TT_card_le := h_TT_card_le
       rho_le := h_rho_le
       bT_le := h_bT_le
       S_le := h_S_le
-      Del_le := h_Del_le
       logDel := h_logDel
       Lw_j := h_Lw_j
       Lw_le := h_Lw_le
-      jetIndex_le_log := h_j0_le
       topPlace_first_bound := h_top_b1
       cloud_place_bound := h_cloud_le2
       uk_extreme := h_uk_extreme
-      em_win := h_em_win
       nodes_gap := h_nodes_gap
       e_centred := h_e_centred
-      e_mu := fun j => (h_e_parity j).num
-      etaF_eq := h_etaF_eq
-      pde_mod := h_pde_mod
-      pde_ne := h_pde_ne
       ccK_log := h_ccK_log
-      ccK_le := h_ccK_le
       lows_far := h_lows_far
       X''_ratio := h_X''_ratio
       bm_le := h_bm_le
-      w''_ge := h_w''_ge
       Del_ge := h_Del_ge
       Del_count := h_Del_count
       h0_ge := h_h0_ge
       heightBound_ge_rank_cubic := h_h0_fun
-      heightBound_ge_degree_power := h_h0_fN
       sig_gaps := h_sig_gaps
       rbS := h_rbS
       lstar1 := h_lstar1
       lstar2 := h_lstar2
       words_le := h_words_le
       g_Y := h_g_Y
-      g_norm := hA.1
       g_mod := hA.2.1
       pde_split := hA.2.2.1
       level_split := hA.2.2.2 }, rfl, rfl⟩

@@ -92,33 +92,27 @@ structure ParameterChoice' (D : D7) (L : SizeData₂ D) : Type where
   CkLow_pos : 0 < CkLow
 
   Ck6 : ℝ
-  Ck6_pos : 0 < Ck6
 
   CfL : ℝ
   CfL_pos : 0 < CfL
 
   cLL : ℝ
-  cLL_pos : 0 < cLL
 
   CnW : ℝ
-  CnW_pos : 0 < CnW
 
   Crho : ℝ
   Crho_pos : 0 < Crho
 
   CDelG : ℝ
-  CDelG_pos : 0 < CDelG
 
   CLw : ℝ
   CLw_pos : 0 < CLw
 
   Cj0 : ℝ
-  Cj0_pos : 0 < Cj0
 
   Cw : ℝ
   Cw_pos : 0 < Cw
   cw : ℝ
-  cw_pos : 0 < cw
 
   CDel : ℝ
   CDel_pos : 0 < CDel
@@ -130,19 +124,15 @@ structure ParameterChoice' (D : D7) (L : SizeData₂ D) : Type where
   Ch0r_pos : 0 < Ch0r
 
   Ch0k : ℝ
-  Ch0k_pos : 0 < Ch0k
 
   Ch0N : ℝ
-  Ch0N_pos : 0 < Ch0N
 
   Cgap : ℝ
   Cgap_pos : 0 < Cgap
 
   CetaF : ℝ
-  CetaF_pos : 0 < CetaF
 
   CF : ℝ
-  CF_pos : 0 < CF
 
   CY : ℝ
   CY_pos : 0 < CY
@@ -150,14 +140,10 @@ structure ParameterChoice' (D : D7) (L : SizeData₂ D) : Type where
   CYL_pos : 0 < CYL
 
   Cpde : ℝ
-  Cpde_pos : 0 < Cpde
 
   CccK : ℝ
-  CccK_pos : 0 < CccK
 
   qd_pow : L.sc.x ^ (2 * L.Ct + 5) < (D.host.q : ℝ) ∧ L.sc.x ^ (2 * L.Ct + 5) < (D.host.d : ℝ)
-
-  logq_ge : L.sc.x ^ (L.sc.ez / 6) ≤ Real.log D.host.q
 
   logDerivative_le_power : |L.logDerivativeAtOne| ≤ L.sc.x ^ L.sc.eps
 
@@ -171,15 +157,7 @@ structure ParameterChoice' (D : D7) (L : SizeData₂ D) : Type where
 
   k_ge_mx : (D.R.m : ℝ) * L.sc.x ^ ((1 : ℝ) / 2) * Real.log L.sc.x ≤ D.R.k
 
-  klogk : Ck6 * (D.R.m : ℝ) ^ 6 * L.sc.L ≤ (D.R.k : ℝ) * Real.log D.R.k
-
   logf_le : Real.log D.R.f ≤ Real.sqrt D.R.rS
-
-  log_sq_conductor_le : Real.log D.R.f ^ 2 ≤ (D.R.m : ℝ) ^ 2 * L.sc.L
-
-  loglogb : Real.log (Real.log L.sc.b) ≤ cLL * D.R.r * D.R.f * Real.log D.R.r
-
-  flogk : CfL * L.sc.L ≤ (D.R.f : ℝ) * Real.log D.R.k
 
   eta_le : L.etaSz ≤ L.sc.b / ((D.R.t : ℝ) ^ 3 * D.R.f * (D.R.k : ℝ) ^ 3)
 
@@ -191,13 +169,9 @@ structure ParameterChoice' (D : D7) (L : SizeData₂ D) : Type where
 
   S_le : 4 * L.Sc ≤ L.LaG * L.sc.b' / D.R.k
 
-  Del_le : 4 * CDelG * (D.R.k : ℝ) ^ 2 * (D.s.Del : ℝ) ≤ L.LaG * L.sc.b'
-
   Lw_j : ∀ l : ℕ, 11 ≤ l → ∃ j : ℕ, lA L ≤ ((l : ℝ) - 1) ^ j ∧ 2 * j + 2 ≤ D.host.Lw
 
   Lw_le : (D.host.Lw : ℝ) ≤ CLw * Real.log L.sc.x
-
-  jetIndex_le_log : (L.j0 : ℝ) ≤ Cj0 * Real.log L.sc.x
 
   bT_le : ∀ t, (L.bT t : ℝ) ≤ L.sc.b' + Nstar L * L.sc.x ^ L.sc.eps * L.LaG * L.sc.b' / D.R.k
 
@@ -216,8 +190,6 @@ structure ParameterChoice' (D : D7) (L : SizeData₂ D) : Type where
 
   uk_extreme : ∀ τ (hk : 2 ≤ D.R.k), (D.eTau τ : D.R.GG) ∉ D.host.topPlaces →
     (D.hc τ).u ⟨D.R.k - 1, by omega⟩ = (D.hc τ).v ⟨D.R.k - 2, by omega⟩ - 1 / 2
-
-  w''_ge : (D.R.k : ℝ) ^ Cw ≤ L.sc.w'' D.R.n ∧ L.sc.b ^ cw ≤ L.sc.w'' D.R.n
 
   Del_ge : (D.R.k : ℝ) ^ CDel * (CDel * D.R.m) ^ 3 / D.div.etaF ^ CDel ≤ (D.s.Del : ℝ) ∧
     CDel * D.R.m * D.R.N D.R.m ≤ (D.s.Del : ℝ) ∧
@@ -245,11 +217,6 @@ structure ParameterChoice' (D : D7) (L : SizeData₂ D) : Type where
 
   heightBound_ge_rank_cubic : (D.R.t : ℝ) + 2 * ((D.R.k : ℝ) + D.R.m * (D.R.t + (D.R.r + 6) + 1)) ^ 3 + 1 ≤ h0 L
 
-  heightBound_ge_degree_power : (D.R.f : ℝ) * (D.R.N D.R.m : ℝ) ^ Ch0N ≤ h0 L
-
-  em_win : ∀ τ (hm : 0 < D.R.m),
-    |((((D.hc τ).e ⟨D.R.m - 1, by omega⟩ - (D.hc τ).b ⟨D.R.m - 1, by omega⟩ : ℚ)) : ℝ) - h0 L / 2| ≤ 2
-
   nodes_gap : ∀ τ (j : ℕ) (h : j + 1 < D.R.m),
     h0 L ≤ (((D.hc τ).b ⟨j + 1, h⟩ - (D.hc τ).b ⟨j, by omega⟩ : ℚ) : ℝ) ∧
     (((D.hc τ).b ⟨j + 1, h⟩ - (D.hc τ).b ⟨j, by omega⟩ : ℚ) : ℝ) ≤ h0 L + 1
@@ -264,8 +231,6 @@ structure ParameterChoice' (D : D7) (L : SizeData₂ D) : Type where
     (∀ (j : ℕ) (h : j + 1 < D.R.m),
       gapS D Cgap < (((D.hc τ).b ⟨j + 1, h⟩ - (D.hc τ).b ⟨j, by omega⟩ : ℚ) : ℝ))
 
-  nW_ge : (4 * (D.R.f : ℝ) + 10) * D.R.r ≤ nW L CnW
-
   logeta : Real.log L.etaSz ≤ L.sc.x ^ (L.sc.eps / 4)
 
   t_le_eta : (D.R.t : ℝ) ≤ L.etaSz
@@ -274,11 +239,7 @@ structure ParameterChoice' (D : D7) (L : SizeData₂ D) : Type where
 
   mteta : (D.R.m : ℝ) * ((D.R.t : ℝ) + 1) * L.etaSz ≤ L.sc.w'' D.R.n
 
-  mSeta : (D.R.m : ℝ) * (L.Sc + L.etaSz) ≤ L.sc.w'' D.R.n * L.sc.L
-
   Neta : (D.R.N D.R.m : ℝ) * L.etaSz ≤ L.de2 * D.R.m * L.sc.w'' D.R.n
-
-  eta2 : L.etaSz ^ 2 * D.R.r * L.sc.L ≤ L.de2 * D.R.m * L.sc.w'' D.R.n ^ 2
 
   rbS : (D.R.r : ℝ) * (L.sc.b' + L.Sc) * Real.log L.sc.x * lA L ≤ L.de2 * D.R.m * L.sc.b
 
@@ -288,34 +249,21 @@ structure ParameterChoice' (D : D7) (L : SizeData₂ D) : Type where
 
   words_le : Fintype.card D.what₂.Word ≤ 2 ^ (D.R.k - 3)
 
-  etaF_eq : D.div.etaF = CetaF * L.sc.x ^ (-CF)
-
   g_Y : ∃ Y : ℝ, ((D.R.k : ℝ) * L.sc.b) ^ 8 ≤ Y ∧
     (D.R.N D.R.m : ℝ) ^ 4 * (condE D : ℝ) ^ CY ≤ Y ^ ((1 : ℝ) / 4) ∧ Real.log Y ≤ CYL * L.sc.L ∧
     ∀ i, Y ≤ (D.host.g i : ℝ) ∧ (D.host.g i : ℝ) ≤ 2 * Y
 
-  g_norm : ∀ i, ∃ π : 𝓞 D.host.E, (π : D.host.E) ∈ D.host.K ∧
-    (π : D.host.E) * D.host.conj (π : D.host.E) = (D.host.g i : D.host.E)
-
   g_mod : ∀ i, D.host.g i % condE D = 1
-
-  pde_mod : D.host.pde % 15 = 1 ∧ D.host.pde' % 15 = 1
 
   pde_split : (Ideal.primesOver (Ideal.span {(D.host.pde : ℤ)}) (𝓞 D.host.E)).ncard =
       Module.finrank ℚ D.host.E ∧
     (Ideal.primesOver (Ideal.span {(D.host.pde' : ℤ)}) (𝓞 D.host.E)).ncard = Module.finrank ℚ D.host.E
-
-  pde_ne : ∀ i, D.host.pde ≠ D.host.g i ∧ D.host.pde' ≠ D.host.g i
 
   pde_log : Real.log D.host.pde ≤ L.sc.L ∧ Real.log D.host.pde' ≤ L.sc.L
 
   level_split : ∀ p ∈ D.host.levelPrimes, D.host.cls p = .splitK
 
   ccK_log : Real.log (Ideal.absNorm D.host.ccK) ≤ L.sc.L
-
-  e_mu : ∀ j : Fin D.R.m, D.host.MuCond (fun τ => (D.eTau τ : D.R.GG)) (fun τ => (D.hc τ).e j)
-
-  ccK_le : (Ideal.absNorm D.host.ccK : ℝ) ≤ CccK * D.host.d
 
 namespace ParameterChoice'
 
