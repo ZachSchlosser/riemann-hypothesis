@@ -883,41 +883,8 @@ open MvPolynomial Finset Formalism.GM.M
 section Pol
 variable {K : Type*} [CommRing K]
 
-private theorem isWeightedHomogeneous_finset_sum {τ ι : Type*} {w : τ → ℕ} (s : Finset ι) (φ : ι → MvPolynomial τ K) {n : ℕ}
-    (h : ∀ i ∈ s, IsWeightedHomogeneous w (φ i) n) : IsWeightedHomogeneous w (∑ i ∈ s, φ i) n := by
-  intro d hd
-  rw [coeff_sum] at hd
-  obtain ⟨i, hi, hne⟩ := Finset.exists_ne_zero_of_sum_ne_zero hd
-  exact h i hi hne
-
 private theorem isWeightedHomogeneous_of_eq_deg {τ : Type*} {w : τ → ℕ} {φ : MvPolynomial τ K} {a b : ℕ}
     (h : IsWeightedHomogeneous w φ a) (e : a = b) : IsWeightedHomogeneous w φ b := e ▸ h
-
-private theorem isWeightedHomogeneous_one' {τ : Type*} (w : τ → ℕ) : IsWeightedHomogeneous w (1 : MvPolynomial τ K) 0 := by
-  first
-  | exact isWeightedHomogeneous_one _ w
-
-private theorem isWeightedHomogeneous_pow {τ : Type*} (w : τ → ℕ) (φ : MvPolynomial τ K) (n : ℕ)
-    (h : IsWeightedHomogeneous w φ n) (k : ℕ) : IsWeightedHomogeneous w (φ ^ k) (k * n) := by
-  induction k with
-  | zero =>
-    rw [pow_zero, zero_mul]
-    exact isWeightedHomogeneous_one' w
-  | succ k ih =>
-    rw [pow_succ, add_one_mul]
-    exact ih.mul h
-
-private theorem isWeightedHomogeneous_finset_prod {τ ι : Type*} (w : τ → ℕ) (s : Finset ι) (φ : ι → MvPolynomial τ K) (n : ι → ℕ)
-    (h : ∀ i ∈ s, IsWeightedHomogeneous w (φ i) (n i)) :
-    IsWeightedHomogeneous w (∏ i ∈ s, φ i) (∑ i ∈ s, n i) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty =>
-    rw [Finset.prod_empty, Finset.sum_empty]
-    exact isWeightedHomogeneous_one' w
-  | insert a s ha ih =>
-    rw [Finset.prod_insert ha, Finset.sum_insert ha]
-    exact (h a (Finset.mem_insert_self a s)).mul (ih (fun i hi => h i (Finset.mem_insert_of_mem hi)))
 
 theorem hom_aeval {σ τ : Type*} (w : τ → ℕ) (v : σ → ℕ) (g : σ → MvPolynomial τ K)
     (hg : ∀ x, IsWeightedHomogeneous w (g x) (v x)) (f : MvPolynomial σ K) (d : ℕ)
@@ -925,11 +892,12 @@ theorem hom_aeval {σ τ : Type*} (w : τ → ℕ) (v : σ → ℕ) (g : σ → 
   classical
 
   rw [f.as_sum, map_sum]
-  refine isWeightedHomogeneous_finset_sum _ _ (fun m hm => ?_)
+  refine IsWeightedHomogeneous.sum _ _ _ (fun m hm => ?_)
   show IsWeightedHomogeneous w (aeval g (monomial m (AddMonoidAlgebra.coeff f m))) d
   have hmd : Finsupp.weight v m = d := hf (mem_support_iff.1 hm)
   have h1 := (isWeightedHomogeneous_C w (AddMonoidAlgebra.coeff f m)).mul
-    (isWeightedHomogeneous_finset_prod w m.support (fun x => g x ^ m x) (fun x => m x * v x) (fun x _ => isWeightedHomogeneous_pow w (g x) (v x) (hg x) (m x)))
+    (IsWeightedHomogeneous.prod m.support (fun x => g x ^ m x) (fun x => m x * v x)
+      (fun x _ => IsWeightedHomogeneous.pow (hg x) (m x)))
   have e : 0 + ∑ x ∈ m.support, m x * v x = d := by
     first
     | (rw [zero_add, ← hmd, Finsupp.weight_apply, Finsupp.sum]; simp only [smul_eq_mul])
@@ -988,7 +956,7 @@ theorem freezeSub_hom (LL : Letters N) (ρ : Fin r) (i' : Fin (N + 1)) (x : Fin 
   rw [freezeSub_apply]
   by_cases hv : LL.vec i = true <;> by_cases hc : c = ρ
   · rw [if_pos hv, if_pos hc]
-    exact isWeightedHomogeneous_finset_sum _ _ (fun c' _ => hX2 p _ _ _ _ (by rfl))
+    exact IsWeightedHomogeneous.sum _ _ _ (fun c' _ => hX2 p _ _ _ _ (by rfl))
   · rw [if_pos hv, if_neg hc]
     exact hX2 p _ _ _ _ (by exact add_comm _ _)
   · rw [if_neg hv, if_pos hc]
@@ -1021,7 +989,7 @@ theorem freeze_pol (LL : Letters N) (ρ : Fin r) (n : ℕ) (hn : LL.total ≤ n)
         exact Finset.sum_congr rfl (fun i _ => hf' m (mem_support_iff.2 hm) i)
       have hA := hom_aeval _ _ (Formalism.GM.M.freezeSub p LL ρ)
         (fun x => freezeSub_hom p LL ρ (Fin.last N) x) f _ hfv
-      have hX := isWeightedHomogeneous_pow (fun y : Fin (N + 1) × Fin r => if y.1 = Fin.last N then 1 else 0) _ _
+      have hX := IsWeightedHomogeneous.pow
         (isWeightedHomogeneous_X' (K := ℚ_[p]) (fun y : Fin (N + 1) × Fin r => if y.1 = Fin.last N then 1 else 0) (Fin.last N, ρ))
         (n - LL.total)
       refine isWeightedHomogeneous_of_eq_deg (hX.mul hA) ?_
@@ -1040,7 +1008,7 @@ theorem freeze_pol (LL : Letters N) (ρ : Fin r) (n : ℕ) (hn : LL.total ≤ n)
         exact hf' m (mem_support_iff.2 hm) i0
       have hA := hom_aeval _ _ (Formalism.GM.M.freezeSub p LL ρ)
         (fun x => freezeSub_hom p LL ρ (Fin.castSucc i0) x) f _ hfv
-      have hX := isWeightedHomogeneous_pow (fun y : Fin (N + 1) × Fin r => if y.1 = Fin.castSucc i0 then 1 else 0) _ _
+      have hX := IsWeightedHomogeneous.pow
         (isWeightedHomogeneous_X' (K := ℚ_[p]) (fun y : Fin (N + 1) × Fin r => if y.1 = Fin.castSucc i0 then 1 else 0) (Fin.last N, ρ))
         (n - LL.total)
       refine isWeightedHomogeneous_of_eq_deg (hX.mul hA) ?_
